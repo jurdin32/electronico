@@ -1,0 +1,490 @@
+{% extends 'index.html' %}
+{% load productos %}
+{% load static %}
+{% block cabecera %}
+    <div class="row">
+        <div class="col-xl-9 col-sm-9">
+            <div class="card mb-4 bg-purple">
+                <div class="card-body">
+                    <div class="media d-flex align-items-center ">
+                        <div class="mr-4 rounded-circle bg-white sr-icon-box text-purple">
+                            <i class="vl_shopping-bag2"></i>
+                        </div>
+                        <div class="media-body text-light">
+                            <h4 class="text-uppercase mb-0 weight500">PANEL DE FACTURACIÓN</h4>
+                            <span>AMBIENTE: {% if ambiente == 1 %}PRUEBAS{% else %}PRODUCCIÓN{% endif %} </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-3">
+            <div class="card mb-4 bg-purple">
+                <div class="card-body">
+                    <div class="media d-flex align-items-center ">
+                        <div class="mr-4 rounded-circle bg-white sr-icon-box text-purple">
+                            <i class="fa fa-sort-numeric-asc"></i>
+                        </div>
+                        <div class="media-body text-light">
+                            <h4 class="text-uppercase mb-0 weight500 numero" style="font-weight: bold">
+                                {{ establecimiento }}{{ puntoEmision }}{{ secuencial }}</h4>
+                            <span>NÚMERO DE FACTURA</span><br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block principal %}
+    <div class="row">
+        <div class="col-xl-12 col-md-12">
+            <div class="card card-shadow mb-4">
+                <div class="card-header border-0">
+                    <div class="custom-title-wrap bar-warning">
+                        <div class="custom-title">Datos del Cliente</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <input type="hidden" id="cliente_id" name="cliente_id" class="form-control" readonly="readonly"
+                               placeholder="id"
+                               aria-label="id" aria-describedby="basic-addon2">
+                        <input type="text" id="nombre" name="nombre" class="form-control"
+                               placeholder="Apellidos del Cliente, ingrese el número de cédula o ruc y luego de clic en buscar"
+                               aria-label="Cliente" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" onclick="buscar()" type="button"
+                                    title="Buscar"><i class="fa fa-search"></i></button>
+                            <button class="btn btn-outline-secondary" onclick="removerCliente()" type="button"
+                                    title="Limpiar Campos"><i
+                                    class="fa fa-minus-circle"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-shadow mb-4" style="padding: 20px">
+        <div class="card-header border-0">
+            <div class="custom-title-wrap bar-primary">
+                <div class="custom-title">Productos listos para ser facturados</div>
+                <a class="btn btn-primary text-white" data-target="#prod" data-toggle="modal">Nuevo Ítem</a>
+            </div>
+        </div>
+        <div class="card-body- pt-3 pb-4">
+            <div class="table-responsive">
+                <table id="tablaProductos" class="table table-bordered table-striped" cellspacing="0">
+                    <thead>
+                    <tr class="bg-purple">
+                        <th class="text-lg-center text-white">Id</th>
+                        <th class="text-lg-center text-white">Código</th>
+                        <th class="text-white">Descrición del Producto</th>
+                        <th class="text-white text-right">Pre. Unit.</th>
+                        <th class="text-white text-right">Sub. I.V.A.</th>
+                        <th class="text-white text-right">Subtotal</th>
+                        <th class="text-lg-center text-white">Cantidad</th>
+                        <th class="text-white text-right">Total</th>
+                        <th class="text-white text-right">I.V.A.</th>
+                        <th class="text-right text-white">PVP</th>
+                        <th class="text-center text-white">Eliminar</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xl-3 col-sm-3">
+            <div class="card mb-4 bg-secondary">
+                <div class="card-body">
+                    <div class="media d-flex align-items-center ">
+                        <div class="mr-4 rounded-circle bg-white sr-icon-box text-secondary">
+                            <a onclick="registrarFactura()" style="cursor:pointer;"><i class="fa fa-save"></i></a>
+                        </div>
+                        <div class="media-body text-light">
+                            <h4 class="text-uppercase mb-0 weight500" onclick="registrarFactura()"
+                                style="cursor:pointer;">Registrar</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-3">
+            <div class="card mb-4 bg-purple">
+                <div class="card-body">
+                    <div class="media d-flex align-items-center ">
+                        <div class="mr-4 rounded-circle bg-white sr-icon-box text-purple">
+                            <i class="vl_calculation"></i>
+                        </div>
+                        <div class="media-body text-light">
+                            <h4 class="text-uppercase mb-0 weight500 subtotal" style="font-weight: bold">0.00</h4>
+                            <span>SUBTOTAL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-3">
+            <div class="card mb-4 bg-warning">
+                <div class="card-body">
+                    <div class="media d-flex align-items-center ">
+                        <div class="mr-4 rounded-circle bg-white sr-icon-box text-purple">
+                            <i class="vl_calculation"></i>
+                        </div>
+                        <div class="media-body text-light">
+                            <h4 class="text-uppercase mb-0 weight500 iva" style="font-weight: bold">0.00</h4>
+                            <span>IVA</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-3">
+            <div class="card mb-4 bg-success">
+                <div class="card-body">
+                    <div class="media d-flex align-items-center ">
+                        <div class="mr-4 rounded-circle bg-white sr-icon-box text-purple">
+                            <i class="vl_calculation"></i>
+                        </div>
+                        <div class="media-body text-light">
+                            <h4 class="text-uppercase mb-0 weight500 total" style="font-weight: bold">0.00</h4>
+                            <span>TOTAL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalCantidad" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titulo">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="idProd" class="form-control">
+                    <input type="number" min="1" id="cantidad" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="cambiar()">Cambiar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal clientes:-->
+    <div class="modal fade" id="clientes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titulo">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table id="tablaClientes" class="table table-bordered table-striped" cellspacing="0">
+                        <thead class="bg-success text-white">
+                        <th>Id</th>
+                        <th>Identificación</th>
+                        <th>Nombre y Apellidos o Razón Social</th>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <label for="">Doble click para seleccionar</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal productos: -->
+    <div class="modal fade" id="prod" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titulo">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table id="tproductos" class="table table-bordered table-striped" cellspacing="0">
+                            <thead>
+                            <tr class="bg-purple">
+                                <th class="text-lg-center text-white">Id</th>
+                                <th class="text-white">Descrición del Producto</th>
+                                <th class="text-white">Precio</th>
+                                <th class="text-white">I.V.A.</th>
+                                <th class="text-white">Total</th>
+                                <th class="text-lg-center text-white">Stock</th>
+                                <th class="text-lg-center text-white"><i class="fa fa-shopping-bag"></i></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for producto in productos %}
+                                <tr style="cursor: pointer">
+                                    <td class="text-lg-center">{{ producto.id }}</td>
+                                    <td>{{ producto.descripcion }}</td>
+                                    <td>{{ producto.precioUnitario }}</td>
+                                    <td>{{ producto.valor_impuesto }}</td>
+                                    <td>{{ producto.total }}</td>
+                                    <td>{% if producto.tipo == "P" %}{% CalcularStock producto.id %}{% else %}Ilimitado{% endif %}</td>
+                                    <td class="text-lg-center">
+                                        <a class="btn btn-danger vender text-white" data-id="{{ producto.id }}"
+                                           data-codigo="{{ producto.codigoAuxiliar }}"
+                                           data-descripcion="{{ producto.descripcion }}"
+                                           data-precio="{{ producto.precioUnitario|floatformat:2 }}"
+                                           data-valor_impuesto="{{ producto.impuesto.porcentaje|floatformat:2 }}"
+                                           data-stock="{% if producto.tipo == "P" %}{% CalcularStock producto.id %}{% else %}1{% endif %}"
+                                           title="Vender"><i class="fa fa-shopping-bag"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'assets/vendor/data-tables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/data-tables/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'alert/alertas.js' %}"></script>
+    <script>
+        console.log('{{ datos }}')
+        let subtotal = 0
+        let ivas = 0
+        let total = 0
+        var count = 0
+
+        for (let key in localStorage) {
+            if (key) {
+                let datos = localStorage.getItem(key)
+                console.log(datos)
+                let objeto = JSON.parse(datos)
+                let iva = parseFloat(objeto.precioUnitario.replace(",", ".")) * parseFloat(objeto.valor_impuesto.replace(",", "."));
+                let precio_con_impuesto = parseFloat(objeto.precioUnitario.replace(",", ".")) * parseFloat(objeto.valor_impuesto.replace(",", ".")) + parseFloat(objeto.precioUnitario.replace(",", "."));
+                let totales = parseFloat(objeto.precioUnitario.replace(",", ".")) * parseFloat(objeto.cantidad);
+                subtotal += totales
+                let pvp = parseFloat(precio_con_impuesto) * parseFloat(objeto.cantidad)
+                total += pvp
+                ivas = pvp - totales
+
+                $("#tablaProductos>tbody").prepend("" +
+                    "<tr ondblclick='seleccionar(this)' style='cursor: pointer'><td class='text-lg-center'>" + objeto.id + "</td><td class='text-lg-center'>" + objeto.codigoAuxiliar + "</td><td>" + objeto.descripcion + "</td>" +
+                    "<td class='text-right'>" + objeto.precioUnitario.replace(",", ".") + "</td><td class='text-right'>" + iva.toFixed(2) + "</td>" +
+                    "<td class='text-right'>" + precio_con_impuesto.toFixed(2) + "</td><td class='text-lg-center'>" + objeto.cantidad + "</td>" +
+                    "<td class='text-right'>" + totales.toFixed(2) + "</td><td class='text-right'>" + ivas.toFixed(2) + "</td><td class='text-right'>" + pvp.toFixed(2) + "</td>" +
+                    "<td class='text-center'><button onclick='deleteRow(this)'><i class='fa fa-trash'></i></button></td></tr>");
+            }
+        }
+
+
+        function sumar() {
+            let total_columna1 = 0
+            let total_columna2 = 0
+            let total_columna3 = 0
+            $('#tablaProductos tbody').find('tr').each(function (i, el) {
+                //Voy incrementando las variables segun la fila ( .eq(0) representa la fila 1 )
+                total_columna1 += parseFloat($(this).find('td').eq(7).text());
+                total_columna2 += parseFloat($(this).find('td').eq(8).text());
+                total_columna3 += parseFloat($(this).find('td').eq(9).text());
+            });
+            $(".subtotal").text(total_columna1.toFixed(2))
+            $(".iva").text(total_columna2.toFixed(2))
+            $(".total").text(total_columna3.toFixed(2))
+        }
+
+        function deleteRow(btn) {
+            row = btn.parentNode.parentNode;
+            id = row.firstChild.textContent
+            localStorage.removeItem(id)
+            row.parentNode.removeChild(row);
+            count = $('#tablaProductos>tbody tr').length;
+            sumar()
+        }
+
+        function seleccionar(x) {
+            row = x;
+            id = row.firstChild.textContent
+            console.log(id)
+            $("#modalCantidad").modal('show')
+            item = JSON.parse(localStorage.getItem(id))
+            console.log(item.cantidad)
+            $("#titulo").text(item.descripcion)
+            $("#cantidad").val(item.cantidad)
+            $("#idProd").val(item.id)
+        }
+
+        function cambiar() {
+            id = $("#idProd").val()
+            storage = localStorage.getItem(id)
+            item = JSON.parse(storage)
+            console.log(item)
+            datos = {
+                id: $('#idProd').val(),
+                codigoAuxiliar: item.codigoAuxiliar,
+                descripcion: item.descripcion,
+                precioUnitario: item.precioUnitario,
+                valor_impuesto: item.valor_impuesto,
+                cantidad: $("#cantidad").val(),
+            }
+            localStorage.setItem(item.id, JSON.stringify(datos))
+            console.log(JSON.stringify(datos))
+            location.reload()
+        }
+
+    </script>
+    <script>
+        function buscar() {
+            $("#clientes").modal('show')
+            $.get('{% url "buscar_clientes" %}', {q: $("#nombre").val()}, function (response) {
+                let resp = JSON.parse(response)
+                console.log(resp)
+                $("#tablaClientes>tbody").html("")
+                for (let cliente in resp) {
+                    $("#tablaClientes>tbody").prepend("<tr ondblclick='seleccionar_row(this)' style='cursor:pointer;'><td>" + resp[cliente].pk + "</td><td>" + resp[cliente].fields.identificacion + "</td><td>" + resp[cliente].fields.nombres_apellidos + "</td></tr>")
+                }
+            });
+        }
+
+        $("#nombre").keypress(function (e) {
+            if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
+                buscar();
+            }
+        })
+
+        function seleccionar_row(x) {
+            console.log(x.text)
+            id = x.firstChild.textContent
+            nombre = x.cells[2].textContent
+            sessionStorage.setItem('cliente', id)
+            sessionStorage.setItem('nombre', nombre)
+            $("#cliente_id").val(id)
+            $("#nombre").val(nombre)
+            $("#clientes").modal('hide')
+        }
+
+        function persona() {
+            id = sessionStorage.getItem('cliente')
+            nombre = sessionStorage.getItem('nombre')
+            $("#cliente_id").val(id)
+            $("#nombre").val(nombre)
+
+        }
+
+        function removerCliente() {
+            sessionStorage.setItem('cliente', 0)
+            sessionStorage.setItem('nombre', '')
+            $("#cliente_id").val('')
+            $("#nombre").val('')
+        }
+
+        function registrarFactura() {
+            count = $('#tablaProductos>tbody tr').length;
+            if (sessionStorage.getItem('cliente') && count > 0) {
+                $.get('{% url "registroFactura" %}', {
+                    secuencial: '{{ secuencial }}', id_cliente: $("#cliente_id").val(),
+                    totalSinImpuestos: $(".subtotal").text(), iva: $(".iva").text(),
+                    importeTotal: $(".total").text()
+                }, function (numero) {
+                    registrarDetalles(numero)
+                    console.log(numero)
+                    localStorage.clear()
+                    sessionStorage.clear()
+                    if ('{{ datos }}' == 'True') {
+                        setTimeout(function () {
+                            firmar(numero)
+                        }, 2000)
+                    }
+                });
+                notificacion(5000, 'success', 'La factura se genero correctamente..!', '/fact/')
+            } else {
+                notificacion(1000, 'error', 'El Cliente y los productos son necesarios..!', '/fact/')
+            }
+
+        }
+
+        function registrarDetalles(id) {
+            $('#tablaProductos tbody').find('tr').each(function (i, el) {
+                producto_id = $(this).find('td').eq(0).text();
+                cantidad = $(this).find('td').eq(6).text();
+                precioUnitario = parseFloat($(this).find('td').eq(3).text());
+                subtotal = parseFloat($(this).find('td').eq(7).text());
+                iva = parseFloat($(this).find('td').eq(8).text());
+                total = parseFloat($(this).find('td').eq(9).text());
+                $.get('{% url "registroDetalles" %}', {
+                    factura_id: id,
+                    producto_id: producto_id,
+                    cantidad: cantidad,
+                    precioUnitario: precioUnitario,
+                    subtotal: subtotal,
+                    iva: iva,
+                    total: total
+                }, function (detalle) {
+                    console.log(detalle)
+                });
+            });
+
+        }
+
+        function firmar(id) {
+            $.get("{% url 'firmar'%}", {id: id}, function (result) {
+                $("#" + id).text(result)
+            })
+        }
+
+        $("#tproductos").DataTable()
+
+        $(".vender").click(function () {
+            sesion = localStorage.getItem($(this).data('id'))
+            newObj = JSON.parse(sesion)
+            let dato = 1
+            if (localStorage.getItem($(this).data('id'))) {
+                dato = newObj.cantidad + 1
+            }
+            let stock=parseInt($(this).data('stock'))
+            if (stock>0) {
+                console.log("hay stock")
+
+                datos = {
+                    id: $(this).data('id'),
+                    codigoAuxiliar: $(this).data('codigo'),
+                    descripcion: $(this).data('descripcion'),
+                    precioUnitario: $(this).data('precio'),
+                    valor_impuesto: $(this).data('valor_impuesto'),
+                    cantidad: dato,
+                }
+                localStorage.setItem($(this).data('id'), JSON.stringify(datos))
+                window.location.href = '/fact/'
+            }
+        })
+
+
+    </script>
+    <script>
+        sumar()
+        persona()
+    </script>
+{% endblock %}

@@ -1,0 +1,374 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Mosaddek">
+
+    <!--favicon icon-->
+    <link rel="icon" type="image/png" href="{% static 'assets/img/favicon.png' %}">
+
+    <title>Home</title>
+
+    <!--web fonts-->
+    <link href="//fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700,800" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
+
+    <!--bootstrap styles-->
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!--icon font-->
+    <link href="{% static 'assets/vendor/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/dashlab-icon/dashlab-icon.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/simple-line-icons/css/simple-line-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/themify-icons/css/themify-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/weather-icons/css/weather-icons.min.css' %}" rel="stylesheet">
+
+    <link href="{% static 'assets/vendor/data-tables/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+    <!--jquery ui-->
+    <link href="{% static 'assets/vendor/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet">
+
+    <!--iCheck-->
+    <link href="{% static 'assets/vendor/icheck/skins/all.css' %}" rel="stylesheet">
+
+    <!--custom styles-->
+    <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="{% static 'assets/vendor/html5shiv.js' %}"></script>
+    <script src="{% static 'assets/vendor/respond.min.js' %}"></script>
+    <![endif]-->
+</head>
+
+<body class="left-sidebar-fixed">
+<!--header start-->
+<header class="app-header">
+    <div class="branding-wrap">
+        <!--left nav toggler start-->
+        <a class="nav-link mt-2 float-left js_left-nav-toggler pos-fixed" href="javaScript:;">
+            <i class=" ti-align-right"></i>
+        </a>
+        <!--left nav toggler end-->
+
+        <!--brand start-->
+        <div class="navbar-brand pos-fixed">
+            <a class="" href="/">
+                <img src="/static/assets/img/logo.png" srcset="/static/assets/img/logo@2x.jpg 2x" alt="CodeLab">
+            </a>
+        </div>
+        <!--brand end-->
+    </div>
+
+    <!--header rightside links-->
+    <ul class="header-links hide-arrow navbar">
+        <li class="nav-item search-bar">
+            <button type="button" class="btn btn-link" data-toggle="modal" data-target="#searchModal">
+                <i class="vl_search"></i>
+            </button>
+        </li>
+    </ul>
+    <!--/header rightside links-->
+</header>
+<!--search modal start-->
+<div class="modal modal-search fade" id="searchModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <input type="text" class="form-control" placeholder="Search...">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--search modal start-->
+<!--header end-->
+
+<div class="app-body">
+    <!--left sidebar start-->
+    <div class="left-nav-wrap">
+        <div class="left-sidebar">
+            <nav class="sidebar-menu">
+                <ul id="nav-accordion">
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="active">
+                            <i class=" ti-home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                        <ul class="sub">
+                            <li><a href="{% url 'index' %}">Dashboard</a></li>
+                            <li><a href="{% url 'productos' %}">Registro de Productos</a></li>
+                            <li><a href="{% url 'clientes' %}">Registro de Clientes</a></li>
+                            <li><a href="{% url 'facturacion' %}">Facturación</a></li>
+                            <li><a href="{% url 'listaFacturas' %}">Lista de Facturas</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <!--left sidebar end-->
+
+    <!--main content wrapper-->
+    <div class="content-wrapper">
+        <div class="container-fluid">
+
+            <!--states start-->
+            {% block cabecera %}
+                <div class="row">
+                    <div class="col-xl-3 col-sm-6">
+                        <div class="card mb-4 bg-purple">
+                            <div class="card-body">
+                                <div class="media d-flex align-items-center ">
+                                    <div class="mr-4 rounded-circle bg-white sr-icon-box text-purple">
+                                        <i class="vl_money"></i>
+                                    </div>
+                                    <div class="media-body text-light">
+                                        <h4 class="text-uppercase mb-0 weight500 total">1,2123</h4>
+                                        <span>Total Generado en el último mes</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-sm-6">
+                        <div class="card mb-4 bg-primary">
+                            <div class="card-body">
+                                <div class="media d-flex align-items-center">
+                                    <div class="mr-4 rounded-circle bg-white  sr-icon-box text-primary">
+                                        <i class="vl_alarm-clock"></i>
+                                    </div>
+                                    <div class="media-body text-white">
+                                        <h4 class="text-uppercase mb-0 weight500 mes">{{ mes }}</h4>
+                                        <span>Mes en Curso</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-sm-6">
+                        <div class="card mb-4 bg-danger">
+                            <div class="card-body">
+                                <div class="media d-flex align-items-center">
+                                    <div class="mr-4 rounded-circle bg-white sr-icon-box text-danger">
+                                        <i class="vl_shopping-bag2"></i>
+                                    </div>
+                                    <div class="media-body text-white">
+                                        <h4 class="text-uppercase mb-0 weight500 mejor">5,6544</h4>
+                                        <span>Mejor día del mes de {{ mes }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-sm-6">
+                        <div class="card mb-4 bg-success">
+                            <div class="card-body">
+                                <div class="media d-flex align-items-center">
+                                    <div class="mr-4 rounded-circle bg-white sr-icon-box text-success">
+                                        <i class="vl_cart-empty"></i>
+                                    </div>
+                                    <div class="media-body text-white">
+                                        <h4 class="text-uppercase mb-0 weight500 deldia"></h4>
+                                        <span>VENTA DEL DÍA</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endblock %}
+
+            <!--states end-->
+
+            <!--sales statistical overview-->
+            <div class="row">
+                <div class="col-xl-12">
+                    {% block principal %}
+                        <div class="card card-shadow mb-4">
+                            <div class="card-header border-0">
+                                <div class="custom-title-wrap bar-info">
+                                    <div class="custom-title">Estadistícas Generales del último mes </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-xl-3">
+                                        <span class="text-muted mb-5 d-inline-block"><i class="fa fa-bolt"></i> Vista de todas las ventas</span>
+                                        <h1 class="mb-0 state-view todo">27,487</h1>
+                                        <small class="text-muted">Ventas realizadas en el mes de {{ mes }} del {{ año }}</small>
+
+                                        <h1 class="mb-0 state-view deldia">27,487</h1>
+                                        <small class="text-muted">Ventas realizadas en el transcurso del día</small>
+
+                                        <ul class="list-unstyled mt-5">
+                                            <li class="text-muted">
+                                                <i class="fa fa-clock-o pr-2"></i> Datos del mes de {{ mes }}
+                                            </li>
+                                        </ul>
+
+                                    </div>
+                                    <div class="col-xl-9">
+                                        <canvas id="sales_overview_chart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+        <!--footer-->
+        <footer class="sticky-footer">
+            <div class="container">
+                <div class="text-center">
+                    <small>Copyright &copy; VectorLab 2018</small>
+                </div>
+            </div>
+        </footer>
+        <!--/footer-->
+    </div>
+    <!--main content wrapper end-->
+</div>
+
+<!--basic scripts-->
+<script src="{% static 'assets/vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery-ui/jquery-ui.min.js' %}"></script>
+<script src="{% static 'assets/vendor/popper.min.js' %}"></script>
+<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery.dcjqaccordion.2.7.js' %}"></script>
+<script src="{% static 'assets/vendor/jquery.nicescroll.min.js' %}"></script>
+<script src="{% static 'alert/sweetalert2@11.js' %}"></script>
+
+
+
+{% block script %}
+    <!--chartjs-->
+<script src="{% static 'assets/vendor/chartjs/Chart.bundle.min.js' %}"></script>
+<!--chartjs initialization-->
+{#<script src="{% static 'assets/vendor/js-init/chartjs/init-sales-overview-chart.js' %}"></script>#}
+<script src="{% static 'assets/vendor/js-init/chartjs/init-area-chart.js' %}"></script>
+<script src="{% static 'assets/vendor/js-init/chartjs/init-line-chart.js' %}"></script>
+
+<script src="{% static 'assets/vendor/data-tables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'assets/vendor/data-tables/dataTables.bootstrap4.min.js' %}"></script>
+{% endblock %}
+
+<!--[if lt IE 9]>
+    <script src="{% static 'assets/vendor/modernizr.js' %}"></script>
+    <![endif]-->
+
+<!--basic scripts initialization-->
+<script src="{% static 'assets/js/scripts.js' %}"></script>
+
+
+
+<script>
+    let url = window.location.href;
+    $('nav ul li ul li a').each(function () {
+        $(this).removeClass('active');
+        if (this.href === url) {
+            $(this).addClass('active');
+        }
+    });
+</script>
+<script>
+    let fechas=[]
+    let valores=[]
+    let total=0
+    let oo=[]
+    let deldia=0
+    {% for factura in facturas %}
+        fechas.push('{{ factura.fecha|date:"d/m/Y" }}')
+        valores.push('{{ factura.importeTotal__sum|floatformat:2 }}'.replace(',',"."))
+        total+=parseFloat('{{ factura.importeTotal__sum|floatformat:2 }}'.replace(',',"."))
+        oo.push(parseFloat('{{ factura.importeTotal__sum|floatformat:2 }}'.replace(',',".")))
+   {% endfor %}
+
+    {% for dia in deldia %}
+        deldia+={{ dia.importeTotal__sum|floatformat:2 }}
+    {% endfor %}
+    $(".deldia").text("$ "+deldia.toFixed(2))
+    $(".todo").text("$ "+total.toFixed(2))
+    $(".total").text("$ "+total.toFixed(2))
+    $(".mejor").text("$ "+Math.max.apply(null, oo))
+    "use strict";
+    var ctx = document.getElementById('sales_overview_chart').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: fechas,
+            datasets: [
+                {
+                label: "Ventas del Mes",
+                type: 'line',
+                data: valores,
+                fill: true,
+                backgroundColor: 'rgba(246,0,95,0.2)',
+                borderColor: '#F1536E',
+                pointBorderColor: '#F1536E',
+                pointBackgroundColor: '#fff',
+                pointBorderWidth: 0,
+
+                borderWidth: 1,
+                borderJoinStyle: 'miter',
+                // pointHoverRadius: 2,
+                pointHoverBackgroundColor: '#F1536E',
+                pointHoverBorderColor: '#F1536E',
+                pointHoverBorderWidth: 1,
+                pointRadius: 3
+            }
+            ]
+        },
+
+        // Configuration options go here
+        options: {
+            maintainAspectRatio: false,
+            legend: {
+                display: true
+            },
+
+            scales: {
+                xAxes: [{
+                    display: true
+                }],
+                yAxes: [{
+                    display: true,
+                    gridLines: {
+                        zeroLineColor: '#f1f3f5',
+                        color: '#f1f3f5',
+                        //drawBorder: false
+                    }
+                }]
+
+            },
+            elements: {
+                line: {
+                    //tension: 0.00001,
+                     tension: 0.4,
+                    borderWidth: 1
+                },
+                point: {
+                    radius: 2,
+                    hitRadius: 10,
+                    hoverRadius: 6,
+                    borderWidth: 4
+                }
+            }
+        }
+    });
+
+</script>
+<style>
+    .sidebar-menu ul li ul.sub li a.active{
+        color: yellow;
+    }
+</style>
+
+</body>
+</html>
+

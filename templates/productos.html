@@ -1,0 +1,307 @@
+{% extends 'index.html' %}
+{% load productos %}
+{% load static %}
+{% block cabecera %}
+    <div class="row">
+    <div class="col-xl-6 col-sm-6">
+            <div class="card mb-4 bg-purple">
+                <div class="card-body">
+                    <div class="media d-flex align-items-center">
+                        <div class="mr-4 rounded-circle bg-white  sr-icon-box text-purple">
+                            <a href=""><i class="vl_download"></i></a>
+                        </div>
+                        <div class="media-body text-white">
+                            <h4 class="text-uppercase mb-0 weight500">Registro de Productos en la Base de datos</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6">
+            <div class="card mb-4 bg-warning">
+                <div class="card-body">
+                    <div class="media d-flex align-items-center ">
+                        <div class="mr-4 rounded-circle bg-white sr-icon-box text-purple">
+                            <i class="vl_shopping-bag2"></i>
+                        </div>
+                        <div class="media-body text-light">
+                            <h4 class="text-uppercase mb-0 weight500">{{ productos.count }}</h4>
+                            <span>Registrados</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6">
+            <div class="card mb-4 bg-success">
+                <div class="card-body">
+                    <div class="media d-flex align-items-center">
+                        <div class="mr-4 rounded-circle bg-white  sr-icon-box text-primary">
+                            <a href="{% url 'facturacion' %}"><i class="vl_cart-empty"></i></a>
+                        </div>
+                        <div class="media-body text-white">
+                            <h4 class="text-uppercase mb-0 weight500 cant">0</h4>
+                            <span>Vender</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block principal %}
+    <div class="card card-shadow mb-4">
+        <div class="card-header border-0">
+            <div class="custom-title-wrap bar-primary">
+                <div class="custom-title">Registro de Productos</div>
+                <a class="btn btn-primary text-white" data-target="#editProducto" data-toggle="modal" >Nuevo registro</a>
+            </div>
+        </div>
+        <div class="card-body- pt-3 pb-4">
+            <div class="table-responsive">
+                <table id="tablaProductos" class="table table-bordered table-striped" cellspacing="0">
+                    <thead>
+                    <tr class="bg-purple">
+                        <th class="text-lg-center text-white">Id</th>
+                        <th class="text-lg-center text-white">Código</th>
+                        <th class="text-lg-center text-white">Tipo</th>
+                        <th class="text-white">Descrición del Producto</th>
+                        <th class="text-white">Stock</th>
+                        <th class="text-lg-center text-white">Cód. %</th>
+                        <th class="text-white">Precio</th>
+                        <th class="text-white">I.V.A.</th>
+                        <th class="text-white">Total</th>
+                        <th class="text-lg-center text-white">Estado</th>
+{#                        <th class="text-lg-center text-white"><i class="fa fa-shopping-bag"></i></th>#}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for producto in productos %}
+                        <tr ondblclick='seleccionar(this)' style="cursor: pointer">
+                            <td class="text-lg-center">{{ producto.id }}</td>
+                            <td class="text-lg-center">{{ producto.codigoAuxiliar }}</td>
+                            <td class="text-lg-center">{{ producto.tipo }}</td>
+                            <td>{{ producto.descripcion }}</td>
+                            <td class="text-lg-center">{% if producto.tipo == "P" %}{% CalcularStock producto.id %}{% else %}Ilimitado{% endif %} </td>
+                            <td class="text-lg-center">{{ producto.impuesto.codigo }}</td>
+                            <td>{{ producto.precioUnitario }}</td>
+                            <td>{{ producto.valor_impuesto }}</td>
+                            <td>{{ producto.total }}</td>
+                            {% if producto.estado %}
+                                <td class="bg-success text-lg-center" style="color: white">Activo</td>
+                            {% else %}
+                                <td class="bg-danger text-lg-center" style="color: white">No Activo</td>
+                            {% endif %}
+                            {% comment %}<td class="text-lg-center">
+                                {% if producto.estado %}
+                                    <a class="btn btn-danger vender text-white" data-id="{{ producto.id }}"
+                                       data-codigo="{{ producto.codigoAuxiliar }}"
+                                       data-descripcion="{{ producto.descripcion }}"
+                                       data-precio="{{ producto.precioUnitario|floatformat:2 }}"
+                                       data-valor_impuesto="{{ producto.impuesto.porcentaje|floatformat:2 }}"
+                                       title="Vender"><i class="fa fa-shopping-bag"></i>
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'activar' producto.id %}" class="btn btn-success" title="Activar"><i class="fa fa-check-circle"></i> </a>
+                                {% endif %}
+
+                            </td>{% endcomment %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="11">Doble click  para editar</td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    {#    editar productos#}
+    <div class="modal fade" id="editProducto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titulo"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" action="">
+                {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="card card-shadow mb-4">
+                            <div class="card-header border-0">
+                                <div class="custom-title-wrap bar-warning">
+                                    <div class="custom-title">Edición de Producto</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Id</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" readonly="readonly" id="idprod" name="id" placeholder="Id">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Tipo</label>
+                                    <div class="col-sm-9">
+                                        <select name="tipo" id="tipo" class="form-control">
+                                            <option value="P">Producto</option>
+                                            <option value="S">Servicio</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Código </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="codigoAuxiliar" readonly="readonly"
+                                               id="codigoAuxiliar" placeholder="Código Auxiliar">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Descripción </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="descripcion" id="descripcion"
+                                               placeholder="Descripción">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Precio Unitario </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="precioUnitario"
+                                               id="precioUnitario" placeholder="Precio Unitario">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Porcentaje del
+                                        Impuesto </label>
+                                    <div class="col-sm-9">
+                                        <select name="impuesto" id="impuesto" class="form-control">
+                                            {% for impuesto in impuestos %}
+                                                <option value="{{ impuesto.id }}"
+                                                        porcentaje="{{ impuesto.porcentaje }}">{{ impuesto }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Valor del
+                                        Impuesto </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" readonly="readonly" class="form-control" name="iva" id="iva" placeholder="IVA">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Total </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" readonly="readonly" class="form-control" name="total" id="total"
+                                               placeholder="Total">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Estado </label>
+                                    <div class="col-sm-9">
+                                        <label class="switch">
+                                            <input type="checkbox" id="activo" name="activo">
+                                            <span class="slider round primary"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-primary"><i class="fa fa-text-width"></i> Nuevo Registro</button>
+                        <button type="submit" class="btn btn-warning"><i class="fa fa-save"></i> Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block script %}
+    <script src="{% static 'assets/vendor/data-tables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/data-tables/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'alert/alertas.js' %}"></script>
+    {% if mensaje %}
+        <script>
+        notificacion(2000, 'success', '{{mensaje}}', '')
+        </script>
+    {% endif %}
+    <script>
+        $('.cant').text(localStorage.length)
+        $(document).ready(function () {
+            $('#tablaProductos').DataTable();
+            $('.cant').text(localStorage.length)
+        });
+
+       {% comment %} $(".vender").click(function () {
+            sesion = localStorage.getItem($(this).data('id'))
+            newObj = JSON.parse(sesion)
+            let dato = 1
+            if (localStorage.getItem($(this).data('id'))) {
+                dato = newObj.cantidad + 1
+            }
+
+            datos = {
+                id: $(this).data('id'),
+                codigoAuxiliar: $(this).data('codigo'),
+                descripcion: $(this).data('descripcion'),
+                precioUnitario: $(this).data('precio'),
+                valor_impuesto: $(this).data('valor_impuesto'),
+                cantidad: dato,
+            }
+            localStorage.setItem($(this).data('id'), JSON.stringify(datos))
+            console.log(JSON.stringify(datos))
+            $('.cant').text(localStorage.length)
+        }){% endcomment %}
+
+        function seleccionar(x) {
+            row = x;
+            id = row.cells[0].textContent
+            codigoAuxiliar = row.cells[1].textContent
+            tipo = row.cells[2].textContent
+            descripcion = row.cells[3].textContent
+            impuesto = row.cells[5].textContent
+            precioUnitario = row.cells[6].textContent
+            valor_impuesto = row.cells[7].textContent
+            total = row.cells[8].textContent
+            estado=row.cells[9].textContent
+            console.log(estado=="No Activo", estado)
+            $("#idprod").val(id)
+            $("#codigoAuxiliar").val(codigoAuxiliar)
+            $("#tipo option[value=" + tipo + "]").attr("selected", true);
+            $("#descripcion").val(descripcion)
+            $("#titulo").text(descripcion)
+            $("#precioUnitario").val(precioUnitario)
+            $("#iva").val(valor_impuesto)
+            if(estado=='Activo'){
+                $("#activo").attr('checked','checked')
+            }
+            else{
+                $("#activo").removeAttr('checked')
+            }
+            $("#total").val(total)
+            $("#impuesto option[value=" + impuesto + "]").attr("selected", true);
+            $("#editProducto").modal('show')
+        }
+
+        function calculoTotal(subtotal, porcentaje) {
+            iva = subtotal * porcentaje
+            total = subtotal + iva
+            $("#iva").val(iva.toFixed(2))
+            $("#total").val(total.toFixed(2))
+        }
+
+        $("#impuesto").change(function () {
+            porcentaje = this.options[this.selectedIndex].getAttribute("porcentaje").replace(",", ".")
+            precio = $("#precioUnitario").val().replace(",", ".")
+            calculoTotal(parseFloat(precio), parseFloat(porcentaje))
+        });
+    </script>
+{% endblock %}
+

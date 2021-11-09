@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <factura id='comprobante' version='1.0.0'>
+            <infoTributaria>
+                <ambiente>1</ambiente><tipoEmision>1</tipoEmision><razonSocial>URDIN GONZALEZ JOHNNY EDGAR</razonSocial><nombreComercial>DIZOF</nombreComercial><ruc>0703886697001</ruc><claveAcceso>0911202101070388669700110010010000001670000000015</claveAcceso><codDoc>01</codDoc><estab>001</estab><ptoEmi>001</ptoEmi><secuencial>000000167</secuencial><dirMatriz>PANAMERICANA Y CARCHI</dirMatriz>
+            </infoTributaria>
+            <infoFactura>
+                <fechaEmision>09/11/2021</fechaEmision><dirEstablecimiento>PANAMERICANA Y CARCHI</dirEstablecimiento><obligadoContabilidad>NO</obligadoContabilidad><tipoIdentificacionComprador>07</tipoIdentificacionComprador><razonSocialComprador>CONSUMIDOR FINAL</razonSocialComprador><identificacionComprador>9999999999999</identificacionComprador><direccionComprador>S/N</direccionComprador><totalSinImpuestos>7.5</totalSinImpuestos><totalDescuento>0.00</totalDescuento><totalConImpuestos><totalImpuesto><codigo>2</codigo><codigoPorcentaje>0</codigoPorcentaje><baseImponible>7</baseImponible><valor>0.00</valor></totalImpuesto><totalImpuesto><codigo>2</codigo><codigoPorcentaje>2</codigoPorcentaje><baseImponible>0.5</baseImponible><valor>0.06</valor></totalImpuesto></totalConImpuestos><propina>0.00</propina><importeTotal>7.56</importeTotal><moneda>DOLAR</moneda><pagos><pago><formaPago>01</formaPago><total>7.56</total><plazo>1</plazo><unidadTiempo>dias</unidadTiempo></pago></pagos>
+            </infoFactura>
+            <detalles>
+                <detalle>
+                    <codigoPrincipal>4</codigoPrincipal>
+                    <codigoAuxiliar>P000001</codigoAuxiliar>
+                    <descripcion>Pendrive Kingston</descripcion>
+                    <cantidad>1.00</cantidad>
+                    <precioUnitario>7.00</precioUnitario>
+                    <descuento>0.00</descuento>
+                    <precioTotalSinImpuesto>7.00</precioTotalSinImpuesto>
+                    <impuestos>
+                        <impuesto>
+                            <codigo>2</codigo>
+                            <codigoPorcentaje>0</codigoPorcentaje>
+                            <tarifa>0.00</tarifa>
+                            <baseImponible>7.00</baseImponible>
+                            <valor>0.00</valor>
+                        </impuesto>
+                    </impuestos>
+                </detalle><detalle>
+                    <codigoPrincipal>8</codigoPrincipal>
+                    <codigoAuxiliar>P000002</codigoAuxiliar>
+                    <descripcion>Cable UTP por metro</descripcion>
+                    <cantidad>1.00</cantidad>
+                    <precioUnitario>0.50</precioUnitario>
+                    <descuento>0.00</descuento>
+                    <precioTotalSinImpuesto>0.50</precioTotalSinImpuesto>
+                    <impuestos>
+                        <impuesto>
+                            <codigo>2</codigo>
+                            <codigoPorcentaje>2</codigoPorcentaje>
+                            <tarifa>12.00</tarifa>
+                            <baseImponible>0.50</baseImponible>
+                            <valor>0.06</valor>
+                        </impuesto>
+                    </impuestos>
+                </detalle>
+            </detalles>
+        </factura>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <factura id='comprobante' version='1.0.0'>
+            <infoTributaria>
+                <ambiente>1</ambiente><tipoEmision>1</tipoEmision><razonSocial>URDIN GONZALEZ JOHNNY EDGAR</razonSocial><nombreComercial>DIZOF</nombreComercial><ruc>0703886697001</ruc><claveAcceso>0811202101070388669700110010010000001420000000014</claveAcceso><codDoc>01</codDoc><estab>001</estab><ptoEmi>001</ptoEmi><secuencial>000000142</secuencial><dirMatriz>PANAMERICANA Y CARCHI</dirMatriz>
+            </infoTributaria>
+            <infoFactura>
+                <fechaEmision>08/11/2021</fechaEmision><dirEstablecimiento>PANAMERICANA Y CARCHI</dirEstablecimiento><obligadoContabilidad>NO</obligadoContabilidad><tipoIdentificacionComprador>07</tipoIdentificacionComprador><razonSocialComprador>CONSUMIDOR FINAL</razonSocialComprador><identificacionComprador>9999999999</identificacionComprador><direccionComprador>S/N</direccionComprador><totalSinImpuestos>15.0</totalSinImpuestos><totalDescuento>0.00</totalDescuento><totalConImpuestos><totalImpuesto><codigo>2</codigo><codigoPorcentaje>2</codigoPorcentaje><baseImponible>15.0</baseImponible><valor>1.8</valor></totalImpuesto></totalConImpuestos><propina>0.00</propina><importeTotal>16.8</importeTotal><moneda>DOLAR</moneda><pagos><pago><formaPago>01</formaPago><total>16.8</total><plazo>1</plazo><unidadTiempo>dias</unidadTiempo></pago></pagos>
+            </infoFactura>
+            <detalles>
+                <detalle>
+                    <codigoPrincipal>5</codigoPrincipal>
+                    <codigoAuxiliar>S000004</codigoAuxiliar>
+                    <descripcion>Inscripción de dominios Web terminación .com</descripcion>
+                    <cantidad>1.00</cantidad>
+                    <precioUnitario>15.00</precioUnitario>
+                    <descuento>0.00</descuento>
+                    <precioTotalSinImpuesto>15.00</precioTotalSinImpuesto>
+                    <impuestos>
+                        <impuesto>
+                            <codigo>2</codigo>
+                            <codigoPorcentaje>2</codigoPorcentaje>
+                            <tarifa>12.00</tarifa>
+                            <baseImponible>15.00</baseImponible>
+                            <valor>1.80</valor>
+                        </impuesto>
+                    </impuestos>
+                </detalle>
+            </detalles>
+        </factura>

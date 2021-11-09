@@ -1,0 +1,115 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block cabecera %}
+    <div class="row">
+        <div class="col-xl-12 col-sm-12">
+            <div class="card mb-4 bg-purple">
+                <div class="card-body">
+                    <div class="media d-flex align-items-center">
+                        <div class="mr-4 rounded-circle bg-white  sr-icon-box text-purple">
+                            <a href=""><i class="vl_download"></i></a>
+                        </div>
+                        <div class="media-body text-white">
+                            <h4 class="text-uppercase mb-0 weight500">LIsta de Facturas</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block principal %}
+    <div class="card card-shadow mb-4">
+        <div class="card-header border-0">
+            <div class="custom-title-wrap bar-primary">
+                <div class="custom-title">Registro de Facturas</div>
+            </div>
+        </div>
+        <div class="card-body- pt-3 pb-4">
+            <div class="table-responsive">
+                <table id="tablaFacturas" class="table table-bordered table-striped" cellspacing="0">
+                    <thead>
+                    <tr class="bg-purple">
+                        <th class="text-lg-center text-white">Fecha</th>
+                        <th class="text-lg-center text-white">Secuencial</th>
+                        <th class="text-white">Cliente</th>
+                        <th class="text-white text-lg-right">Subtotal</th>
+                        <th class="text-white text-lg-right">IVA</th>
+                        <th class="text-white text-lg-right">Total</th>
+                        <th class="text-white text-center">Estado</th>
+                        <th class="text-white text-center">Firmar</th>
+                        <th class="text-white text-center">{% if datos.usa_facturacion_electronica %}Autorizar{% else %}PDF{% endif %}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for factura in facturas %}
+                        <tr>
+                            <td class="text-lg-center">{{ factura.fecha|date:"d-m-Y" }}</td>
+                            <td class="text-lg-center">{{ factura.secuencial }}</td>
+                            <td>{{ factura.cliente.nombres_apellidos }}</td>
+                            <td class="text-right">{{ factura.totalSinImpuestos }}</td>
+                            <td class="text-right">{{ factura.iva }}</td>
+                            <td class="text-right">{{ factura.importeTotal }}</td>
+                            <td id="estado-{{ factura.id }}">{% if datos.usa_facturacion_electronica %}{{ factura.estado }}{% else %}No Aplica{% endif %}</td>
+                            <td class="text-center">
+                            {% if datos.usa_facturacion_electronica %}
+                                {% if not factura.firmado %}
+                                    <button class="btn btn-success" id="{{ factura.id }}" onclick="firmar({{ factura.id }})">
+                                    <i class="fa fa-pencil"></i> Firmar</button>{% else %}FIRMADO{% endif %}
+                            {% else %}
+                                No Aplica
+                            {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <a class="btn btn-primary" href="/fac/ride/?clave={{ factura.clave_acceso }}"><i class="fa fa-print"></i></a>
+                            {% if datos.usa_facturacion_electronica %}
+                                {% if factura.enviado == False %}
+                                <button class="btn btn-danger" id="{{ factura.clave_acceso }}" onclick="autorizar('{{ factura.clave_acceso }}')">
+                                    <i class="fa fa-file-o"></i> Por Autorizar</button>{% else %}
+                                {% if factura.estado %}
+                                <a class="btn btn-success" href="/media/autorizados/{{ factura.clave_acceso }}.xml"><i class="fa fa-files-o"></i></a>
+                                <a class="btn btn-warning" href="/media/autorizados/{{ factura.clave_acceso }}.json"><i class="fa fa-file-excel-o"></i></a>
+                                <a class="btn btn-danger" href="/consulta?fac={{ factura.clave_acceso }}"><i class="fa fa-file-code-o"></i></a>
+                                {% endif %}
+
+                            {% endif %}
+                            {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="9">Solo si se trata de facturación electrónica: <i class="fa fa-print text-primary"></i> Ride | <i class="fa fa-files-o text-success"></i> XML | <i class="fa fa-file-excel-o text-warning"></i> JSON | <i class="fa fa-file-code-o text-danger"></i> Volver a Generar el Documento</td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'assets/vendor/data-tables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/data-tables/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/data-tables/datetime-moment.js' %}"></script>
+    <script>
+    $("#tablaFacturas").dataTable({
+        columnDefs: [ { type: 'date', 'targets': [0] } ],
+        order: [[ 0, 'desc' ],[ 1, 'desc' ],[ 6, 'asc' ]],
+    })
+    </script>
+    <script>
+        function firmar(id){
+            $.get("{% url 'firmar'%}",{id:id},function (result) {
+                $("#"+id).text(result)
+            })
+            window.location.href='/fac/list/'
+        }
+        function autorizar(id){
+            $.get("{% url 'enviar_sri'%}",{fac:id},function (result) {
+                $("#"+estado+"-"+id).text(result)
+            })
+            window.location.href='/fac/list/'
+        }
+    </script>
+{% endblock %}

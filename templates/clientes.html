@@ -1,0 +1,197 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block cabecera %}
+    <div class="row">
+    <div class="col-xl-12 col-sm-12">
+            <div class="card mb-4 bg-purple">
+                <div class="card-body">
+                    <div class="media d-flex align-items-center">
+                        <div class="mr-4 rounded-circle bg-white  sr-icon-box text-purple">
+                            <a href=""><i class="vl_user-male"></i></a>
+                        </div>
+                        <div class="media-body text-white">
+                            <h4 class="text-uppercase mb-0 weight500">Clientes registrados en la Base de datos</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block principal %}
+    <div class="card card-shadow mb-4">
+        <div class="card-header border-0">
+            <div class="custom-title-wrap bar-primary">
+                <div class="custom-title">Clientes en la base de datos</div>
+                <a data-target="#editCLiente" data-toggle="modal" class="btn btn-primary text-white">Registrar Nuevo</a>
+            </div>
+        </div>
+        <div class="card-body- pt-3 pb-4">
+            <div class="table-responsive">
+                <table id="tablaClientes" class="table table-bordered table-striped" cellspacing="0">
+                    <thead>
+                    <tr class="bg-purple">
+                        <th class="text-lg-center text-white">Id</th>
+                        <th class="text-lg-center text-white">Tipo de Identificación</th>
+                        <th class="text-white">Identificación</th>
+                        <th class="text-white">Nombre o Razon Social</th>
+                        <th class="text-white">Dirección</th>
+                        <th class="text-white">Telefono</th>
+                        <th class="text-lg-center text-white">E-mail</th>
+                        <th class="text-lg-center text-white">Opciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for cliente in clientes %}
+                        <tr ondblclick="seleccionar(this)" style="cursor: pointer">
+                            <td class="text-lg-center">{{ cliente.id }}</td>
+                            <td class="text-lg-center">{{ cliente.tipo_documento }}</td>
+                            <td>{{ cliente.identificacion }}</td>
+                            <td>{{ cliente.nombres_apellidos }}</td>
+                            <td>{{ cliente.direccion }}</td>
+                            <td>{{ cliente.telefono }}</td>
+                            <td class="text-lg-center" >{{ cliente.correo_electronico }}</td>
+                            <td class="text-lg-center {% if cliente.estado %}bg-success{% else %}bg-danger{% endif %} text-white">{% if cliente.estado %}Activo{% else %}No Activo{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr><td colspan="8">Doble clic para seleccionar</td></tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+{#    clientes#}
+     <div class="modal fade" id="editCLiente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titulo"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post" action="">
+                {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="card card-shadow mb-4">
+                            <div class="card-header border-0">
+                                <div class="custom-title-wrap bar-warning">
+                                    <div class="custom-title">Edición de Producto</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Id</label>
+                                    <div class="col-sm-9">
+                                        <input type="number" class="form-control" readonly="readonly" id="idCli" name="id" placeholder="Id">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Tipo de identificación</label>
+                                    <div class="col-sm-9">
+                                        <select name="tipo" id="tipo" class="form-control">
+                                            <option value="05">CÉDULA</option>
+                                            <option value="04">RUC</option>
+                                            <option value="06">PASAPORTE</option>
+                                            <option value="07">VENTA A CONSUMIDOR FINAL*</option>
+                                            <option value="08">IDENTIFICACION DELEXTERIOR*</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">No. de Identificación </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" maxlength="13" required="required" name="identificacion" id="identificacion" placeholder="0000000000000">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Nombres y Apellidos o Razón Social </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="nombres" id="nombres" required="required"
+                                               placeholder="Nombres y Apellidos o Razón social del Cliente">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Direccion </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" required="required" class="form-control" name="direccion"
+                                               id="direccion" placeholder="Dirección de Domicilio">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Teléfono </label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" name="telefono"
+                                               id="telefono" maxlength="10" placeholder="Teléfono del cliente">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Correo electrónico</label>
+                                    <div class="col-sm-9">
+                                        <input type="email" class="form-control" name="correo" id="correo" placeholder="E-mail del Cliente">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Estado </label>
+                                    <div class="col-sm-9">
+                                        <label class="switch">
+                                            <input type="checkbox" id="activo" name="activo">
+                                            <span class="slider round primary"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-primary"><i class="fa fa-text-width"></i> Nuevo Registro</button>
+                        <button type="submit" class="btn btn-warning"><i class="fa fa-save"></i> Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'assets/vendor/data-tables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/data-tables/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'alert/alertas.js' %}"></script>
+    {% if mensaje %}
+        <script>
+        notificacion(2000, 'success', '{{mensaje}}', '')
+        </script>
+    {% endif %}
+    <script>
+    $("#tablaClientes").dataTable()
+    function seleccionar(x) {
+        row = x;
+        id = row.cells[0].textContent
+        tipo_identificacion=row.cells[1].textContent
+        identificacion=row.cells[2].textContent
+        nombre=row.cells[3].textContent
+        direccion=row.cells[4].textContent
+        telefono=row.cells[5].textContent
+        email=row.cells[6].textContent
+        estado=row.cells[7].textContent
+        console.table(id, tipo_identificacion, identificacion, nombre, direccion, telefono, email, estado)
+        $("#titulo").text(nombre)
+        $("#idCli").val(id)
+        $("#nombres").val(nombre)
+        $("#identificacion").val(identificacion)
+        $("#direccion").val(direccion)
+        $("#correo").val(email)
+        $("#telefono").val(telefono)
+        $("#tipo option[value=" + tipo_identificacion + "]").attr("selected", true);
+        if(estado=='Activo'){
+                $("#activo").attr('checked','checked')
+            }
+            else{
+                $("#activo").removeAttr('checked')
+            }
+        $('#editCLiente').modal('show')
+    }
+    </script>
+{% endblock %}
