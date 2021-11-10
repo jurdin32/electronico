@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from simple_search import search_filter
@@ -15,6 +16,7 @@ def buscar_cliente(request):
         clientes = serializers.serialize('json',clientes)
     return JsonResponse(clientes,safe=False)
 
+@login_required(login_url='login')
 def clientes(request):
     mensaje=""
     empresa=Empresa.objects.get(usuario=request.user)

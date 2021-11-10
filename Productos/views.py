@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.mail import message
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
@@ -6,7 +7,7 @@ from django.shortcuts import render
 from Facturacion.models import Empresa, PorcentajesImpuestos
 from Productos.models import Producto
 
-
+@login_required(login_url='login')
 def registro_productos(request):
     empresa=Empresa.objects.get(usuario=request.user)
     mensaje=""

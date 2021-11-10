@@ -5,13 +5,15 @@ from django.conf.urls.static import static
 
 from Facturacion.views import enviar_sri, consulta_comprobantes, facturacion, registroFactura, registroDetalles, \
     facturas, firmar_documento, ride
-from Inicio.views import index
+from Inicio.views import index, LoginView, LogoutView
 from Personas.views import clientes, buscar_cliente
 from Productos.views import registro_productos
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',index, name='index'),
+    path('login/',LoginView,name='login'),
+    path('logout/',LogoutView,name='logout'),
 
     path('product/',registro_productos, name='productos'),
 

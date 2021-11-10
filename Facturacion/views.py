@@ -5,6 +5,7 @@ import subprocess
 import json
 import zeep as zeep
 from dicttoxml import dicttoxml
+from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.http import HttpResponse, HttpResponseRedirect
 
@@ -196,7 +197,7 @@ def consulta_comprobantes(request):
             print(json)
     return HttpResponseRedirect('/fac/list/')
 
-
+@login_required(login_url='login')
 def facturacion(request):
     datos_factura = DatosFacturacion.objects.get(empresa__usuario=request.user)
     cantidad = Factura.objects.count()

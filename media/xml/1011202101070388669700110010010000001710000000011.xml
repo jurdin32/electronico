@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <factura id='comprobante' version='1.0.0'>
+            <infoTributaria>
+                <ambiente>1</ambiente><tipoEmision>1</tipoEmision><razonSocial>URDIN GONZALEZ JOHNNY EDGAR</razonSocial><nombreComercial>DIZOF</nombreComercial><ruc>0703886697001</ruc><claveAcceso>1011202101070388669700110010010000001710000000011</claveAcceso><codDoc>01</codDoc><estab>001</estab><ptoEmi>001</ptoEmi><secuencial>000000171</secuencial><dirMatriz>PANAMERICANA Y CARCHI</dirMatriz>
+            </infoTributaria>
+            <infoFactura>
+                <fechaEmision>10/11/2021</fechaEmision><dirEstablecimiento>PANAMERICANA Y CARCHI</dirEstablecimiento><obligadoContabilidad>NO</obligadoContabilidad><tipoIdentificacionComprador>05</tipoIdentificacionComprador><razonSocialComprador>BRIAN SEBASTIAN YAGUARIMA COYAGO</razonSocialComprador><identificacionComprador>1727314948</identificacionComprador><direccionComprador>LA RAQUEL VIA A BARBONES</direccionComprador><totalSinImpuestos>1000.0</totalSinImpuestos><totalDescuento>0.00</totalDescuento><totalConImpuestos><totalImpuesto><codigo>2</codigo><codigoPorcentaje>2</codigoPorcentaje><baseImponible>1000</baseImponible><valor>120.00</valor></totalImpuesto></totalConImpuestos><propina>0.00</propina><importeTotal>1120.0</importeTotal><moneda>DOLAR</moneda><pagos><pago><formaPago>01</formaPago><total>1120.0</total><plazo>1</plazo><unidadTiempo>dias</unidadTiempo></pago></pagos>
+            </infoFactura>
+            <detalles>
+                <detalle>
+                    <codigoPrincipal>10</codigoPrincipal>
+                    <codigoAuxiliar>S000001</codigoAuxiliar>
+                    <descripcion>Desarrollo de Sitio Web básico</descripcion>
+                    <cantidad>2.00</cantidad>
+                    <precioUnitario>500.00</precioUnitario>
+                    <descuento>0.00</descuento>
+                    <precioTotalSinImpuesto>1000.00</precioTotalSinImpuesto>
+                    <impuestos>
+                        <impuesto>
+                            <codigo>2</codigo>
+                            <codigoPorcentaje>2</codigoPorcentaje>
+                            <tarifa>12.00</tarifa>
+                            <baseImponible>1000.00</baseImponible>
+                            <valor>120.00</valor>
+                        </impuesto>
+                    </impuestos>
+                </detalle>
+            </detalles>
+        </factura>

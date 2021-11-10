@@ -1,6 +1,9 @@
 import datetime
 
-from django.db.models import Count, Sum
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 # Create your views here.
@@ -10,6 +13,22 @@ meses=[
     'Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'
 ]
 
+def LoginView(request):
+    if request.POST:
+        user = authenticate(username=request.POST.get('username'), password=request.POST.get('password'),is_active=True)
+        if user:
+            login(request,user)
+            return HttpResponseRedirect("/")
+    else:
+        return render(request, 'login.html')
+
+@login_required(login_url='/login')
+def LogoutView(request):
+    logout(request)
+    return HttpResponseRedirect('/')
+
+
+@login_required(login_url='login')
 def index(request):
     fecha_actual=datetime.datetime.now()
     facturas=Factura.objects.filter(empresa__usuario=request.user, fecha__month=fecha_actual.month)
