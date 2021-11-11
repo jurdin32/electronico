@@ -1,0 +1,1 @@
+asegurarse que la carpeta media este en la ruta del home
