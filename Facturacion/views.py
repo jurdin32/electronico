@@ -1,3 +1,5 @@
+
+# -*- coding: utf-8 -*-
 import datetime
 import os.path
 import subprocess
@@ -16,7 +18,6 @@ from DocumentosElectronicos.models import Factura, DetallesFactura, ImpuestosFac
 from Facturacion.models import DatosFacturacion, Webservices, Empresa
 from Facturacion.script import modulo_11
 from Productos.models import Kardex, Producto
-from electronico.settings import BASE_DIR
 from electronico.snniper import render_to_pdf
 
 
