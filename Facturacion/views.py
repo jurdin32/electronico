@@ -140,15 +140,18 @@ def generarFactura(factura_id):
 def firmar_documento(request):
     if request.GET.get('id'):
         factura = Factura.objects.get(id=request.GET.get('id'))
-        factura.firmado = True
-        factura.save()
         datos = DatosFacturacion.objects.get(empresa=factura.empresa)
-        javapath = os.path.join(BASE_DIR, 'static/Java/Linux/jdk1.7.0_80/bin/java')
-        java = os.path.join(BASE_DIR, 'static/Java/comprobantes.jar')
-        path = os.path.join(BASE_DIR, 'media/xml/%s.xml' % factura.clave_acceso)
-        path_salida = os.path.join(BASE_DIR, 'media/firmado')
-        args = [java, path, datos.certificado.path, datos.clave, path_salida, factura.clave_acceso + ".xml"]
-        subprocess.run([javapath, '-jar'] + args)
+        try:
+            javapath = '/var/www/static/Java/Linux/jdk1.7.0_80/bin/java'
+            java = '/var/www/static/Java/comprobantes.jar'
+            path = '/var/www/media/xml/%s.xml' % factura.clave_acceso
+            path_salida = '/var/www/media/firmado'
+            args = [java, path, datos.certificado.path, datos.clave, path_salida, factura.clave_acceso + ".xml"]
+            subprocess.run([javapath, '-jar'] + args)
+            factura.firmado = True
+            factura.save()
+        except Exception as error:
+            print(error)
         return HttpResponse('FIRMADO')
 
 
