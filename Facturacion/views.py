@@ -1,10 +1,8 @@
-
+#!/usr/local/bin/python3
 # -*- coding: utf-8 -*-
-import datetime
-import os.path
-import subprocess
 
-import json
+import datetime
+import subprocess
 import zeep as zeep
 from dicttoxml import dicttoxml
 from django.contrib.auth.decorators import login_required
