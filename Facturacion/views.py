@@ -131,7 +131,7 @@ def generarFactura(factura_id):
                                                                                                                attr_type=False,
                                                                                                                root=False))).replace(
         "b'", "").replace(">'", ">").replace('val3', detalles).replace("<item>","<totalImpuesto>").replace("</item>","</totalImpuesto>")
-    path = os.path.join(BASE_DIR, 'media/xml/%s.xml' % clave_acceso)
+    path = '%s/xml/%s.xml' % (datos_factura.ruta_home_media,clave_acceso)
     xml = open(path, 'w')
     xml.write(factura)
     xml.close()
@@ -142,10 +142,10 @@ def firmar_documento(request):
         factura = Factura.objects.get(id=request.GET.get('id'))
         datos = DatosFacturacion.objects.get(empresa=factura.empresa)
         try:
-            javapath = '/var/www/static/Java/Linux/jdk1.7.0_80/bin/java'
-            java = '/var/www/static/Java/comprobantes.jar'
-            path = '/var/www/media/xml/%s.xml' % factura.clave_acceso
-            path_salida = '/var/www/media/firmado'
+            javapath = '%s/Java/Linux/jdk1.7.0_80/bin/java'%datos.ruta_home_media
+            java = '%s/Java/comprobantes.jar'%datos.ruta_home_media
+            path = '%s/xml/%s.xml' % (datos.ruta_home_media,factura.clave_acceso)
+            path_salida = '%s/firmado'%datos.ruta_home_media
             args = [java, path, datos.certificado.path, datos.clave, path_salida, factura.clave_acceso + ".xml"]
             subprocess.run([javapath, '-jar'] + args)
             factura.firmado = True
@@ -157,24 +157,29 @@ def firmar_documento(request):
 
 def enviar_sri(request):
     webservice = Webservices.objects.get(empresa__usuario=request.user, estado=True, envio_consulta=1)
+
     if request.GET.get('fac'):
         factura=Factura.objects.get(clave_acceso=request.GET.get('fac'))
-        factura.enviado=True
-        factura.save()
-        print('Ambiente', webservice.webservice, webservice.tipo_ambiente)
-        path = os.path.join(BASE_DIR, 'media/firmado/%s.xml' % request.GET.get('fac'))
-        respuestas = os.path.join(BASE_DIR, 'media/firmado/%s.json' % request.GET.get('fac'))
-        print(path)
-        comprobante = open(path, "rb")  # apertura del archivo xml
-        xmlBytes = comprobante.read()  # creando mapa de bits del comprobante
-        client = zeep.Client(wsdl=webservice.webservice)  # creando una instancia de zeep cliente
-        print("Inicia el proceso de envio..!!")
-        result = client.service.validarComprobante(xmlBytes)
-        jsonarchivo = open(respuestas, "w")
-        jsonarchivo.write(str(result))
-        jsonarchivo.close()
-        print("Respuesta: ", result)  # respuesta del servidor
-        consulta_comprobantes(request)
+        datos = DatosFacturacion.objects.get(empresa=factura.empresa)
+        try:
+            print('Ambiente', webservice.webservice, webservice.tipo_ambiente)
+            path = '%s/firmado/%s.xml' % (datos.ruta_home_media,request.GET.get('fac'))
+            respuestas ='%s/firmado/%s.json' % (datos.ruta_home_media,request.GET.get('fac'))
+            print(path)
+            comprobante = open(path, "rb")  # apertura del archivo xml
+            xmlBytes = comprobante.read()  # creando mapa de bits del comprobante
+            client = zeep.Client(wsdl=webservice.webservice)  # creando una instancia de zeep cliente
+            print("Inicia el proceso de envio..!!")
+            result = client.service.validarComprobante(xmlBytes)
+            jsonarchivo = open(respuestas, "w")
+            jsonarchivo.write(str(result))
+            jsonarchivo.close()
+            factura.enviado = True
+            factura.save()
+            print("Respuesta: ", result)  # respuesta del servidor
+            consulta_comprobantes(request)
+        except Exception as error:
+            print(error)
     return HttpResponse(webservice.tipo_ambiente)
 
 def crear_archivos(path,json,formato):
@@ -187,7 +192,9 @@ def consulta_comprobantes(request):
     client = zeep.Client(wsdl=webservice.webservice)
     json = client.service.autorizacionComprobante(request.GET.get('fac'))
     if request.GET.get('fac'):
-        path = os.path.join(BASE_DIR, 'media/autorizados/%s' % request.GET.get('fac'))
+        factura=Factura.objects.get(clave_acceso=request.GET.get('fac'))
+        datos = DatosFacturacion.objects.get(empresa=factura.empresa)
+        path = '%s/autorizados/%s' % (datos.ruta_home_media,request.GET.get('fac'))
         crear_archivos(path,json['autorizaciones']['autorizacion'][0]['comprobante'],'xml')
         crear_archivos(path,json,'json')
         try:

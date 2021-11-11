@@ -76,6 +76,7 @@ class DatosFacturacion(models.Model):
     ambiente=models.IntegerField(default=1)
     certificado=models.FileField(upload_to='certificados',null=True,blank=True)
     clave=models.CharField(max_length=100, default="")
+    ruta_home_media=models.CharField(max_length=1000,default='/home/johnny/media/')
     usa_facturacion_electronica=models.BooleanField(default=False)
 
     def save(self, force_insert=False, force_update=False, using=None,
