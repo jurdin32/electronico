@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 from Facturacion.views import enviar_sri, consulta_comprobantes, facturacion, registroFactura, registroDetalles, \
     facturas, firmar_documento, ride
 from Inicio.views import index, LoginView, LogoutView
+from OrdenesTrabajo.views import ordenes_trabajo
 from Personas.views import clientes, buscar_cliente
 from Productos.views import registro_productos
 
@@ -19,6 +20,9 @@ urlpatterns = [
 
     path('client/',clientes, name='clientes'),
     path('search_client/',buscar_cliente, name='buscar_clientes'),
+
+    path('orden_trabajo/',ordenes_trabajo,name='orden_trabajo'),
+
     path('fact/',facturacion, name='facturacion'),
     path('fac/list/',facturas,name='listaFacturas'),
     path('save_fact/',registroFactura, name='registroFactura'),

@@ -1,6 +1,3 @@
-#!/usr/local/bin/python3
-# -*- coding: utf-8 -*-
-
 import datetime
 import subprocess
 import zeep as zeep
@@ -12,8 +9,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 # Create your views here.
 from django.shortcuts import render
 
-from DocumentosElectronicos.models import Factura, DetallesFactura, ImpuestosFactura
-from Facturacion.models import DatosFacturacion, Webservices, Empresa
+from DocumentosElectronicos.models import Factura, DetallesFactura
+from Facturacion.models import DatosFacturacion, Webservices
 from Facturacion.script import modulo_11
 from Productos.models import Kardex, Producto
 from electronico.snniper import render_to_pdf
