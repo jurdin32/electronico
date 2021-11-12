@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'Personas',
     'Productos',
     'DocumentosElectronicos',
+    'OrdenesTrabajo',
 
 ]
 
