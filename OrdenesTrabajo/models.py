@@ -28,5 +28,6 @@ class Orden(models.Model):
              update_fields=None):
         datos=DatosFacturacion.objects.get(empresa=self.empresa)
         ordenes=Orden.objects.filter(empresa=self.empresa).count()+datos.secuencial+1
-        self.secuencial=str.zfill(ordenes,9)
+        if not self.secuencial:
+            self.secuencial=str.zfill(ordenes,9)
         super(Orden, self).save()

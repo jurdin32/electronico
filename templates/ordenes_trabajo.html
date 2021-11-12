@@ -32,26 +32,22 @@
                     <thead>
                     <tr class="bg-purple">
                         <th class="text-lg-center text-white">Id</th>
-                        <th class="text-lg-center text-white">Tipo de Identificación</th>
-                        <th class="text-white">Identificación</th>
-                        <th class="text-white">Nombre o Razon Social</th>
-                        <th class="text-white">Dirección</th>
-                        <th class="text-white">Telefono</th>
-                        <th class="text-lg-center text-white">E-mail</th>
-                        <th class="text-lg-center text-white">Opciones</th>
+                        <th class="text-lg-center text-white">Fecha</th>
+                        <th class="text-white">Secuencial</th>
+                        <th class="text-white">Cliente</th>
+                        <th class="text-white">Dispositivo</th>
+                        <th class="text-white">Estado</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for cliente in clientes %}
+                    {% for orden in ordenes %}
                         <tr ondblclick="seleccionar(this)" style="cursor: pointer">
-                            <td class="text-lg-center">{{ cliente.id }}</td>
-                            <td class="text-lg-center">{{ cliente.tipo_documento }}</td>
-                            <td>{{ cliente.identificacion }}</td>
-                            <td>{{ cliente.nombres_apellidos }}</td>
-                            <td>{{ cliente.direccion }}</td>
-                            <td>{{ cliente.telefono }}</td>
-                            <td class="text-lg-center" >{{ cliente.correo_electronico }}</td>
-                            <td class="text-lg-center {% if cliente.estado %}bg-success{% else %}bg-danger{% endif %} text-white">{% if cliente.estado %}Activo{% else %}No Activo{% endif %}</td>
+                            <td class="text-lg-center">{{ orden.id }}</td>
+                            <td class="text-lg-center">{{ orden.fecha|date:"d-m-Y" }}</td>
+                            <td>{{ orden.secuencial }}</td>
+                            <td>{{ orden.cliente.nombres_apellidos }}</td>
+                            <td>{{ orden.dispositivo_recibido }}</td>
+                            <td>{{ orden.estado }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -169,14 +165,12 @@
     function seleccionar(x) {
         row = x;
         id = row.cells[0].textContent
-        tipo_identificacion=row.cells[1].textContent
-        identificacion=row.cells[2].textContent
-        nombre=row.cells[3].textContent
-        direccion=row.cells[4].textContent
-        telefono=row.cells[5].textContent
-        email=row.cells[6].textContent
-        estado=row.cells[7].textContent
-        console.table(id, tipo_identificacion, identificacion, nombre, direccion, telefono, email, estado)
+        fecha=row.cells[1].textContent
+        secuencial=row.cells[2].textContent
+        cliente=row.cells[3].textContent
+        dispositivo=row.cells[4].textContent
+        estado=row.cells[5].textContent
+        console.table(id, fecha, secuencial, cliente, dispositivo, estado)
         $("#titulo").text(nombre)
         $("#idCli").val(id)
         $("#nombres").val(nombre)
