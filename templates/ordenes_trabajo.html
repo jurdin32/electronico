@@ -19,16 +19,37 @@
     </div>
 {% endblock %}
 {% block principal %}
+    <div class="row">
+        <div class="col-xl-12 col-md-12">
+            <div class="card card-shadow mb-4">
+                <div class="card-header border-0">
+                    <div class="custom-title-wrap bar-warning">
+                        <div class="custom-title">Datos del Cliente</div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="input-group">
+                        <input type="hidden" id="cliente_id" name="cliente_id" class="form-control" readonly="readonly" placeholder="id" aria-label="id" aria-describedby="basic-addon2" value="">
+                        <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Apellidos del Cliente, ingrese el número de cédula o ruc y luego de clic en buscar" aria-label="Cliente" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" onclick="buscar()" type="button" title="Buscar"><i class="fa fa-search"></i></button>
+                            <button class="btn btn-outline-secondary" onclick="removerCliente()" type="button" title="Limpiar Campos"><i class="fa fa-minus-circle"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="card card-shadow mb-4">
         <div class="card-header border-0">
             <div class="custom-title-wrap bar-primary">
                 <div class="custom-title">Ordenes Registradas</div>
-                <a data-target="#editCLiente" data-toggle="modal" class="btn btn-primary text-white">Nueva Orden</a>
+                <a onclick="$('#secuencial').val('')" data-target="#editCLiente" data-toggle="modal" class="btn btn-primary text-white">Nueva Orden</a>
             </div>
         </div>
         <div class="card-body- pt-3 pb-4">
             <div class="table-responsive">
-                <table id="tablaClientes" class="table table-bordered table-striped" cellspacing="0">
+                <table id="tClientes" class="table table-bordered table-striped" cellspacing="0">
                     <thead>
                     <tr class="bg-purple">
                         <th class="text-lg-center text-white">Id</th>
@@ -42,7 +63,7 @@
                     <tbody>
                     {% for orden in ordenes %}
                         <tr ondblclick="seleccionar(this)" style="cursor: pointer">
-                            <td class="text-lg-center">{{ orden.id }}</td>
+                            <td class="text-lg-center">{{ orden.cliente.id }}</td>
                             <td class="text-lg-center">{{ orden.fecha|date:"d-m-Y" }}</td>
                             <td>{{ orden.secuencial }}</td>
                             <td>{{ orden.cliente.nombres_apellidos }}</td>
@@ -61,7 +82,7 @@
 {#    clientes#}
      <div class="modal fade" id="editCLiente" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="titulo"></h5>
@@ -75,78 +96,111 @@
                         <div class="card card-shadow mb-4">
                             <div class="card-header border-0">
                                 <div class="custom-title-wrap bar-warning">
-                                    <div class="custom-title">Edición de Producto</div>
+                                    <div class="custom-title">Registrar Orden de Trabajo</div>
                                 </div>
                             </div>
                             <div class="card-body">
                                 <div class="form-group row">
-                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Id</label>
-                                    <div class="col-sm-9">
-                                        <input type="number" class="form-control" readonly="readonly" id="idCli" name="id" placeholder="Id">
+                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Id del CLiente</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" required="required" class="form-control" readonly="readonly" id="idCli" name="id" placeholder="Id">
+                                    </div>
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Secuencial</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" required="required" class="form-control" readonly="readonly" id="secuencial" name="secuencial" placeholder="000000000">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Tipo de identificación</label>
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Dispositivos Recibidos</label>
                                     <div class="col-sm-9">
-                                        <select name="tipo" id="tipo" class="form-control">
-                                            <option value="05">CÉDULA</option>
-                                            <option value="04">RUC</option>
-                                            <option value="06">PASAPORTE</option>
-                                            <option value="07">VENTA A CONSUMIDOR FINAL*</option>
-                                            <option value="08">IDENTIFICACION DELEXTERIOR*</option>
-                                        </select>
+                                        <textarea placeholder="Ingrese todos los que considere necesarios, separe por comas" name="dispositivo_recibido" id="dispositivo_recibido" cols="30" rows="2" style="resize: none" class="form-control"></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="inputPassword3" class="col-sm-3 col-form-label">No. de Identificación </label>
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Marca y/o Modelo </label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" maxlength="13" required="required" name="identificacion" id="identificacion" placeholder="0000000000000">
+                                        <input type="text" class="form-control" name="marca_modelo" id="marca_modelo" placeholder="Ingrese la marca y o el modelo">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Nombres y Apellidos o Razón Social </label>
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Contraseña </label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" name="nombres" id="nombres" required="required"
-                                               placeholder="Nombres y Apellidos o Razón social del Cliente">
+                                        <input type="text" class="form-control" name="password" id="password" placeholder="Cuando aplique">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Direccion </label>
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Numero de Serie </label>
                                     <div class="col-sm-9">
-                                        <input type="text" required="required" class="form-control" name="direccion"
-                                               id="direccion" placeholder="Dirección de Domicilio">
+                                        <input type="text" class="form-control" name="numero_serie"
+                                               id="numero_serie" placeholder="Cuando aplique">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Teléfono </label>
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Cables y accesorios</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" name="telefono"
-                                               id="telefono" maxlength="10" placeholder="Teléfono del cliente">
+                                        <textarea placeholder="Ingrese todos los que considere necesarios, separe por comas" name="cables_accesorios" id="cables_accesorios" cols="30" rows="2" style="resize: none" class="form-control"></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Correo electrónico</label>
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Problema reportado por el cliente</label>
                                     <div class="col-sm-9">
-                                        <input type="email" class="form-control" name="correo" id="correo" placeholder="E-mail del Cliente">
+                                        <textarea placeholder="Descripción del problema" name="problema_reportado" id="problema_reportado" cols="30" rows="2" style="resize: none" class="form-control"></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Estado </label>
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Observaciones</label>
                                     <div class="col-sm-9">
-                                        <label class="switch">
-                                            <input type="checkbox" id="activo" name="activo">
-                                            <span class="slider round primary"></span>
-                                        </label>
+                                        <textarea placeholder="Describa alguna observación" name="observaciones" id="observaciones" cols="30" rows="2" style="resize: none" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword3" class="col-sm-3 col-form-label">Total</label>
+                                    <div class="col-sm-2">
+                                        <input type="number" step="0.001" class="form-control text-right" name="total" value="0.00" id="total" placeholder="0.00">
+                                    </div>
+                                    <label for="inputPassword3" class="col-sm-1 col-form-label">Abono</label>
+                                    <div class="col-sm-2">
+                                        <input type="number" step="0.001" class="form-control text-right" name="abono" id="abono" value="0.00" placeholder="0.00">
+                                    </div>
+                                    <label for="inputPassword3" class="col-sm-2 col-form-label">Total a Cobrar</label>
+                                    <div class="col-sm-2">
+                                        <input type="number" step="0.001" class="form-control text-right" readonly="readonly" value="0.00" name="total_cobrar" id="total_cobrar" placeholder="0.00">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="reset" class="btn btn-primary"><i class="fa fa-text-width"></i> Nuevo Registro</button>
+                        <button type="reset" onclick="$('#secuencial').val(''); $('#idCli').val('')" class="btn btn-primary"><i class="fa fa-text-width"></i> Nuevo Registro</button>
                         <button type="submit" class="btn btn-warning"><i class="fa fa-save"></i> Guardar</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+     <div class="modal fade" id="clientes" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titulo">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table id="tablaClientes" class="table table-bordered table-striped" cellspacing="0">
+                        <thead class="bg-success text-white">
+                        <th>Id</th>
+                        <th>Identificación</th>
+                        <th>Nombre y Apellidos o Razón Social</th>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <label for="">Doble click para seleccionar</label>
+                </div>
             </div>
         </div>
     </div>
@@ -161,7 +215,7 @@
         </script>
     {% endif %}
     <script>
-    $("#tablaClientes").dataTable()
+    $("#tClientes").dataTable()
     function seleccionar(x) {
         row = x;
         id = row.cells[0].textContent
@@ -171,21 +225,64 @@
         dispositivo=row.cells[4].textContent
         estado=row.cells[5].textContent
         console.table(id, fecha, secuencial, cliente, dispositivo, estado)
-        $("#titulo").text(nombre)
         $("#idCli").val(id)
-        $("#nombres").val(nombre)
-        $("#identificacion").val(identificacion)
-        $("#direccion").val(direccion)
-        $("#correo").val(email)
-        $("#telefono").val(telefono)
-        $("#tipo option[value=" + tipo_identificacion + "]").attr("selected", true);
-        if(estado=='Activo'){
-                $("#activo").attr('checked','checked')
-            }
-            else{
-                $("#activo").removeAttr('checked')
-            }
-        $('#editCLiente').modal('show')
+        $("#secuencial").val(secuencial)
+        $("#editCLiente").modal('show')
     }
+    </script>
+    <script>
+        function buscar() {
+            $("#clientes").modal('show')
+            $.get('{% url "buscar_clientes" %}', {q: $("#nombre").val()}, function (response) {
+                let resp = JSON.parse(response)
+                console.log(resp)
+                $("#tablaClientes>tbody").html("")
+                for (let cliente in resp) {
+                    $("#tablaClientes>tbody").prepend("<tr ondblclick='seleccionar_row(this)' style='cursor:pointer;'><td>" + resp[cliente].pk + "</td><td>" + resp[cliente].fields.identificacion + "</td><td>" + resp[cliente].fields.nombres_apellidos + "</td></tr>")
+                }
+            });
+        }
+
+        $("#nombre").keypress(function (e) {
+            if (e.keyCode === 13) {  //checks whether the pressed key is "Enter"
+                buscar();
+            }
+        })
+
+        function seleccionar_row(x) {
+            $('#secuencial').val('')
+            console.log(x.text)
+            id = x.firstChild.textContent
+            nombre = x.cells[2].textContent
+            sessionStorage.setItem('cliente', id)
+            sessionStorage.setItem('nombre', nombre)
+            $("#cliente_id").val(id)
+            $("#nombre").val(nombre)
+            $("#clientes").modal('hide')
+            $("#idCli").val(id)
+
+        }
+
+        function removerCliente() {
+            sessionStorage.setItem('cliente', 0)
+            sessionStorage.setItem('nombre', '')
+            $("#cliente_id").val('')
+            $("#nombre").val('')
+        }
+
+        function calculo(){
+            total=$("#total").val().replace(",",".")
+            abono=$("#abono").val().replace(",",".")
+            suma=parseFloat(total)-parseFloat(abono)
+            total_cobrar=$("#total_cobrar").val(suma.toFixed(2))
+        }
+
+        $("#total").keyup(function(){
+            calculo()
+        });
+        $("#abono").keyup(function(){
+            calculo()
+        });
+
     </script>
 {% endblock %}
