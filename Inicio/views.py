@@ -19,6 +19,8 @@ def LoginView(request):
         if user:
             login(request,user)
             return HttpResponseRedirect("/")
+        else:
+            return render(request, 'login.html')
     else:
         return render(request, 'login.html')
 
