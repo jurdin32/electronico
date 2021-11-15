@@ -9,15 +9,16 @@ def ordenes_trabajo(request):
     empresa=Empresa.objects.get(usuario=request.user)
     datos = DatosFacturacion.objects.get(empresa=empresa)
     ordenes = Orden.objects.filter(empresa=empresa).count() + datos.secual_orden_trabajo + 1
+    print(ordenes)
     if request.POST:
         print(request.POST)
         orden=None
         try:
-            orden=Orden.objects.get(secuencial=request.POST.get('secuencial'))
+            orden=Orden.objects.get(id=request.POST.get('idReg'))
         except:
             orden=Orden()
         orden.empresa=empresa
-        orden.secuencial=str.zfill(str(ordenes), 9)
+        orden.secuencial=request.POST.get('secuencial')
         orden.cliente_id=request.POST.get('id')
         orden.dispositivo_recibido=request.POST.get('dispositivo_recibido')
         orden.dispositivo_recibido = request.POST.get('dispositivo_recibido')

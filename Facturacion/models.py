@@ -73,7 +73,7 @@ class Webservices(models.Model):
 class DatosFacturacion(models.Model):
     empresa=models.ForeignKey(Empresa,on_delete=models.CASCADE,null=True,blank=True)
     secuencial=models.IntegerField(default=0)
-    secual_orden_trabajo=models.IntegerField(default=0)
+    secual_orden_trabajo=models.IntegerField(default=1)
     ambiente=models.IntegerField(default=1)
     certificado=models.FileField(upload_to='certificados',null=True,blank=True)
     clave=models.CharField(max_length=100, default="")
