@@ -58,6 +58,7 @@
                         <th class="text-white">Cliente</th>
                         <th class="text-white">Dispositivo</th>
                         <th class="text-white">Estado</th>
+                        <th class="text-white">Imprimir</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -69,6 +70,7 @@
                             <td>{{ orden.cliente.nombres_apellidos }}</td>
                             <td>{{ orden.dispositivo_recibido }}</td>
                             <td>{{ orden.estado }}</td>
+                            <td><a href="" class="btn btn-primary"><i class="fa fa-print"></i></a></td>
                         </tr>
                     {% endfor %}
                     </tbody>
