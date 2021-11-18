@@ -44,7 +44,7 @@
         <div class="card-header border-0">
             <div class="custom-title-wrap bar-primary">
                 <div class="custom-title">Ordenes Registradas</div>
-                <a onclick="$('#secuencial').val('{{ secuencial }}')" data-target="#editCLiente" data-toggle="modal" class="btn btn-primary text-white">Nueva Orden</a>
+                <a onclick="inicializar()" data-target="#editCLiente" data-toggle="modal" class="btn btn-primary text-white">Nueva Orden</a>
             </div>
         </div>
         <div class="card-body- pt-3 pb-4">
@@ -222,6 +222,11 @@
     $('#cliente_id').val(sessionStorage.getItem('cliente'))
     $("#idCli").val(sessionStorage.getItem('cliente'))
     $("#tClientes").dataTable()
+
+    function inicializar(){
+        $('#secuencial').val('{{ secuencial }}');
+        $('#idCli').val(sessionStorage.getItem('cliente'))
+    }
     function seleccionar(x,xid,dispositivo,marca_modelo,password,numero_serie,cables_accesorios,problema_reportado,observaciones,solucion,total,abono,total_cobrar) {
         row = x;
         id = row.cells[0].textContent
