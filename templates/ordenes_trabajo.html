@@ -44,7 +44,7 @@
         <div class="card-header border-0">
             <div class="custom-title-wrap bar-primary">
                 <div class="custom-title">Ordenes Registradas</div>
-                <a onclick="$('#secuencial').val('{{ secuencial }}');$('#idCli').val('')" data-target="#editCLiente" data-toggle="modal" class="btn btn-primary text-white">Nueva Orden</a>
+                <a onclick="$('#secuencial').val('{{ secuencial }}')" data-target="#editCLiente" data-toggle="modal" class="btn btn-primary text-white">Nueva Orden</a>
             </div>
         </div>
         <div class="card-body- pt-3 pb-4">
@@ -271,8 +271,9 @@
             sessionStorage.setItem('nombre', nombre)
             $("#cliente_id").val(id)
             $("#nombre").val(nombre)
-            $("#clientes").modal('hide')
             $("#idCli").val(id)
+            $("#clientes").modal('hide')
+
             console.log('cliente: ',sessionStorage.getItem('cliente'))
 
         }
