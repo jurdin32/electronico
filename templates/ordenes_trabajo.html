@@ -265,7 +265,7 @@
         function seleccionar_cliente_row(x) {
             $('#secuencial').val('')
             console.log(x.text)
-            id = x.firstChild.textContent
+            id = x.cells[0].textContent
             nombre = x.cells[2].textContent
             sessionStorage.setItem('cliente', id)
             sessionStorage.setItem('nombre', nombre)
@@ -273,6 +273,7 @@
             $("#nombre").val(nombre)
             $("#clientes").modal('hide')
             $("#idCli").val(id)
+            console.log('cliente: ',sessionStorage.getItem('cliente'))
 
         }
 
