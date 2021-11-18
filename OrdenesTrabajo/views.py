@@ -6,6 +6,7 @@ from OrdenesTrabajo.models import Orden
 
 
 def ordenes_trabajo(request):
+    mensaje=""
     empresa=Empresa.objects.get(usuario=request.user)
     datos = DatosFacturacion.objects.get(empresa=empresa)
     ordenes = Orden.objects.filter(empresa=empresa).count() + datos.secual_orden_trabajo + 1
@@ -15,8 +16,10 @@ def ordenes_trabajo(request):
         orden=None
         try:
             orden=Orden.objects.get(id=request.POST.get('idReg'))
+            mensaje="El registro se ha actualizado exitosamente..!"
         except:
             orden=Orden()
+            mensaje = "La Nueva orden de trabajo se registró..!"
         orden.empresa=empresa
         orden.secuencial=request.POST.get('secuencial')
         orden.cliente_id=request.POST.get('id')
@@ -39,5 +42,6 @@ def ordenes_trabajo(request):
         'empresa':empresa,
         'ordenes':Orden.objects.filter(empresa=empresa),
         'secuencial':str.zfill(str(ordenes), 9),
+        'mensaje':mensaje,
     }
     return render(request,'ordenes_trabajo.html',contexto)
