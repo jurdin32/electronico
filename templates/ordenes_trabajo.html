@@ -244,6 +244,8 @@
     }
     </script>
     <script>
+        $('#nombre').val(sessionStorage.getItem('nombre'))
+        $('#cliente_id').val(sessionStorage.getItem('cliente'))
         function buscar() {
             $("#clientes").modal('show')
             $.get('{% url "buscar_clientes" %}', {q: $("#nombre").val()}, function (response) {
@@ -269,9 +271,8 @@
             nombre = x.cells[2].textContent
             sessionStorage.setItem('cliente', id)
             sessionStorage.setItem('nombre', nombre)
-            $("#cliente_id").val(id)
             $("#nombre").val(nombre)
-            $("#idCli").val(id)
+            $("#idCli").val(sessionStorage.getItem('cliente'))
             $("#clientes").modal('hide')
 
             console.log('cliente: ',sessionStorage.getItem('cliente'))
