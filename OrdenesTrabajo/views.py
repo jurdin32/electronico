@@ -34,7 +34,7 @@ def ordenes_trabajo(request):
         orden.total=request.POST.get('total') or 0
         orden.abono=request.POST.get('abono') or 0
         orden.total_cobrar=request.POST.get('total_cobrar') or 0
-        if float(request.POST.get('total_cobrar'))==0:
+        if float(request.POST.get('total_cobrar').replace(",","."))==float('0.00'):
             orden.estado="PAGADO"
         orden.estado=request.POST.get('estado') or "POR COBRAR"
         orden.save()
