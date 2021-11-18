@@ -20,6 +20,7 @@ def ordenes_trabajo(request):
         except:
             orden=Orden()
             mensaje = "La Nueva orden de trabajo se registró..!"
+        print(request.POST)
         orden.empresa=empresa
         orden.secuencial=request.POST.get('secuencial')
         orden.cliente_id=request.POST.get('id')
