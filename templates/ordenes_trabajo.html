@@ -44,7 +44,7 @@
         <div class="card-header border-0">
             <div class="custom-title-wrap bar-primary">
                 <div class="custom-title">Ordenes Registradas</div>
-                <a onclick="$('#secuencial').val('{{ secuencial }}')" data-target="#editCLiente" data-toggle="modal" class="btn btn-primary text-white">Nueva Orden</a>
+                <a onclick="$('#secuencial').val('{{ secuencial }}');$('#idCli').val('')" data-target="#editCLiente" data-toggle="modal" class="btn btn-primary text-white">Nueva Orden</a>
             </div>
         </div>
         <div class="card-body- pt-3 pb-4">
@@ -62,8 +62,8 @@
                     </thead>
                     <tbody>
                     {% for orden in ordenes %}
-                        <tr ondblclick="seleccionar(this)" style="cursor: pointer">
-                            <td class="text-lg-center">{{ orden.cliente.id }}</td>
+                        <tr ondblclick="seleccionar(this,{{ orden.cliente.id }},'{{ orden.dispositivo_recibido }}','{{ orden.marca_modelo }}','{{ orden.password }}','{{ orden.numero_serie }}','{{ orden.cables_accesorios }}','{{ orden.problema_reportado }}','{{ observaciones }}','{{ orden.tareas_a_realizar }}','{{ orden.total|floatformat:2 }}','{{ orden.abono|floatformat:2 }}','{{ orden.total_cobrar|floatformat:2 }}')" style="cursor: pointer">
+                            <td class="text-lg-center">{{ orden.id }}</td>
                             <td class="text-lg-center">{{ orden.fecha|date:"d-m-Y" }}</td>
                             <td>{{ orden.secuencial }}</td>
                             <td>{{ orden.cliente.nombres_apellidos }}</td>
@@ -103,8 +103,8 @@
                                 <div class="form-group row">
                                     <label for="inputEmail3" class="col-sm-2 col-form-label">Id del CLiente</label>
                                     <div class="col-sm-4">
-                                        <input type="hidden" required="required" class="form-control" readonly="readonly" id="idReg" name="idReg" placeholder="Id">
-                                        <input type="text" required="required" class="form-control" readonly="readonly" id="idCli" name="id" placeholder="Id">
+                                        <input type="hidden" required="required" class="form-control" readonly id="idReg" name="idReg" placeholder="0">
+                                        <input type="text" class="form-control" id="idCli" readonly name="id" placeholder="Seleccione de la página principal">
                                     </div>
                                     <label for="inputEmail3" class="col-sm-2 col-form-label">Secuencial</label>
                                     <div class="col-sm-4">
@@ -114,7 +114,7 @@
                                 <div class="form-group row">
                                     <label for="inputPassword3" class="col-sm-2 col-form-label">Dispositivos Recibidos</label>
                                     <div class="col-sm-10">
-                                        <textarea placeholder="Ingrese todos los que considere necesarios, separe por comas" name="dispositivo_recibido" id="dispositivo_recibido" cols="30" rows="2" style="resize: none" class="form-control"></textarea>
+                                        <textarea required placeholder="Ingrese todos los que considere necesarios, separe por comas" name="dispositivo_recibido" id="dispositivo_recibido" cols="30" rows="2" style="resize: none" class="form-control"></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -141,13 +141,19 @@
                                     </div>
                                     <label for="inputPassword3" class="col-sm-2 col-form-label">Problema reportado por el cliente</label>
                                     <div class="col-sm-4">
-                                        <textarea placeholder="Descripción del problema" name="problema_reportado" id="problema_reportado" cols="30" rows="2" style="resize: none" class="form-control"></textarea>
+                                        <textarea required placeholder="Descripción del problema" name="problema_reportado" id="problema_reportado" cols="30" rows="2" style="resize: none" class="form-control"></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="inputPassword3" class="col-sm-2 col-form-label">Observaciones</label>
                                     <div class="col-sm-10">
                                         <textarea placeholder="Describa alguna observación" name="observaciones" id="observaciones" cols="30" rows="2" style="resize: none" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputPassword3" class="col-sm-2 col-form-label">Solución</label>
+                                    <div class="col-sm-10">
+                                        <textarea required placeholder="Describa la solución" name="solucion" id="solucion" cols="30" rows="2" style="resize: none" class="form-control"></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -213,18 +219,28 @@
     {% endif %}
     <script>
     $("#tClientes").dataTable()
-    function seleccionar(x) {
+    function seleccionar(x,xid,dispositivo,marca_modelo,password,numero_serie,cables_accesorios,problema_reportado,observaciones,solucion,total,abono,total_cobrar) {
         row = x;
         id = row.cells[0].textContent
         fecha=row.cells[1].textContent
         secuencial=row.cells[2].textContent
-        cliente=row.cells[3].textContent
-        dispositivo=row.cells[4].textContent
         estado=row.cells[5].textContent
-        console.table(id, fecha, secuencial, cliente, dispositivo, estado)
+        console.table(id, fecha, secuencial, dispositivo,total, abono,total_cobrar, estado)
         $("#idReg").val(id)
+        $("#idCli").val(xid)
         $("#secuencial").val(secuencial)
         $("#editCLiente").modal('show')
+        $("#dispositivo_recibido").val(dispositivo)
+        $("#marca_modelo").val(marca_modelo)
+        $("#password").val(password)
+        $("#numero_serie").val(numero_serie)
+        $('#cables_accesorios').val(cables_accesorios)
+        $('#problema_reportado').val(problema_reportado)
+        $('#observaciones').val(observaciones)
+        $('#solucion').val(solucion)
+        $('#total').val(parseFloat(total.replace(",",".")).toFixed(2))
+        $('#abono').val(parseFloat(abono.replace(",",".")).toFixed(2))
+        $('#total_cobrar').val(parseFloat(total_cobrar.replace(",",".")).toFixed(2))
     }
     </script>
     <script>
@@ -235,7 +251,7 @@
                 console.log(resp)
                 $("#tablaClientes>tbody").html("")
                 for (let cliente in resp) {
-                    $("#tablaClientes>tbody").prepend("<tr ondblclick='seleccionar_row(this)' style='cursor:pointer;'><td>" + resp[cliente].pk + "</td><td>" + resp[cliente].fields.identificacion + "</td><td>" + resp[cliente].fields.nombres_apellidos + "</td></tr>")
+                    $("#tablaClientes>tbody").prepend("<tr ondblclick='seleccionar_cliente_row(this)' style='cursor:pointer;'><td>" + resp[cliente].pk + "</td><td>" + resp[cliente].fields.identificacion + "</td><td>" + resp[cliente].fields.nombres_apellidos + "</td></tr>")
                 }
             });
         }
@@ -246,7 +262,7 @@
             }
         })
 
-        function seleccionar_row(x) {
+        function seleccionar_cliente_row(x) {
             $('#secuencial').val('')
             console.log(x.text)
             id = x.firstChild.textContent

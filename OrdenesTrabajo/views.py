@@ -20,14 +20,13 @@ def ordenes_trabajo(request):
         orden.empresa=empresa
         orden.secuencial=request.POST.get('secuencial')
         orden.cliente_id=request.POST.get('id')
-        orden.dispositivo_recibido=request.POST.get('dispositivo_recibido')
         orden.dispositivo_recibido = request.POST.get('dispositivo_recibido')
         orden.marca_modelo=request.POST.get('marca_modelo')
         orden.password=request.POST.get('password')
         orden.numero_serie=request.POST.get('numero_serie')
         orden.cables_accesorios=request.POST.get('cables_accesorios')
         orden.problema_reportado=request.POST.get('problema_reportado')
-        orden.tareas_a_realizar=request.POST.get('tareas_a_realizar')
+        orden.tareas_a_realizar=request.POST.get('solucion')
         orden.observaciones=request.POST.get('observaciones')
         orden.total=request.POST.get('total') or 0
         orden.abono=request.POST.get('abono') or 0
