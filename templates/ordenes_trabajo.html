@@ -218,6 +218,8 @@
         </script>
     {% endif %}
     <script>
+    $('#nombre').val(sessionStorage.getItem('nombre'))
+    $('#cliente_id').val(sessionStorage.getItem('cliente'))
     $("#tClientes").dataTable()
     function seleccionar(x,xid,dispositivo,marca_modelo,password,numero_serie,cables_accesorios,problema_reportado,observaciones,solucion,total,abono,total_cobrar) {
         row = x;
@@ -244,8 +246,7 @@
     }
     </script>
     <script>
-        $('#nombre').val(sessionStorage.getItem('nombre'))
-        $('#cliente_id').val(sessionStorage.getItem('cliente'))
+
         function buscar() {
             $("#clientes").modal('show')
             $.get('{% url "buscar_clientes" %}', {q: $("#nombre").val()}, function (response) {
