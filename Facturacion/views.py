@@ -146,9 +146,11 @@ def firmar_documento(request):
             subprocess.run([javapath, '-jar'] + args)
             factura.firmado = True
             factura.save()
+            return HttpResponse('FIRMADO')
         except Exception as error:
             print(error)
-        return HttpResponse('FIRMADO')
+            return HttpResponse(error)
+
 
 
 def enviar_sri(request):
