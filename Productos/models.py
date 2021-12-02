@@ -18,7 +18,7 @@ class Producto(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
-        self.descripcion=str.upper(self.descripcion).encode('utf-8')
+        self.descripcion=str(str.upper(self.descripcion).encode('utf-8'))
         if not self.codigoAuxiliar:
             contador=Producto.objects.filter(tipo=self.tipo).count()+1
             self.codigoAuxiliar=self.tipo+str.zfill(str(contador),6)
