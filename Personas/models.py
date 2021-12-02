@@ -15,5 +15,10 @@ class Clientes(models.Model):
     correo_electronico=models.EmailField(max_length=300)
     estado=models.BooleanField(default=True)
 
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        self.nombres_apellidos=str.upper(self.nombres_apellidos)
+        super(Clientes, self).save()
+
     def __str__(self):
         return self.identificacion+" | "+self.nombres_apellidos
