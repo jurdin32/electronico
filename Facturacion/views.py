@@ -127,7 +127,7 @@ def generarFactura(factura_id):
                                                                                                                attr_type=False,
                                                                                                                root=False))).replace(
         "b'", "").replace(">'", ">").replace('val3', detalles).replace("<item>","<totalImpuesto>").replace("</item>","</totalImpuesto>")
-    factura=factura.encode('utf-8')
+    factura=str(factura.encode('utf-8')).replace("b'", "").replace("'","")
     path = '%s/xml/%s.xml' % (datos_factura.ruta_home_media,clave_acceso)
     xml = open(path, 'w')
     xml.write(factura)
