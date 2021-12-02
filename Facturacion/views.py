@@ -151,8 +151,6 @@ def firmar_documento(request):
             print(error)
             return HttpResponse(error)
 
-
-
 def enviar_sri(request):
     webservice = Webservices.objects.get(empresa__usuario=request.user, estado=True, envio_consulta=1)
 
