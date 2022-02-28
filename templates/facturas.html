@@ -33,12 +33,13 @@
                         <th class="text-lg-center text-white">Fecha</th>
                         <th class="text-lg-center text-white">Secuencial</th>
                         <th class="text-white">Cliente</th>
-                        <th class="text-white text-lg-right">Subtotal</th>
-                        <th class="text-white text-lg-right">IVA</th>
+                        <th class="text-white">Tipo</th>
                         <th class="text-white text-lg-right">Total</th>
                         <th class="text-white text-center">Estado</th>
                         <th class="text-white text-center">Firmar</th>
-                        <th class="text-white text-center">{% if datos.usa_facturacion_electronica %}Autorizar{% else %}PDF{% endif %}</th>
+                        <th class="text-white text-center">
+                            {% if datos.usa_facturacion_electronica %}Autorizar{% else %}PDF{% endif %}
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
@@ -47,10 +48,19 @@
                             <td class="text-lg-center">{{ factura.fecha|date:"d-m-Y" }}</td>
                             <td class="text-lg-center">{{ factura.secuencial }}</td>
                             <td>{{ factura.cliente.nombres_apellidos }}</td>
-                            <td class="text-right">{{ factura.totalSinImpuestos }}</td>
-                            <td class="text-right">{{ factura.iva }}</td>
+                            <td>{{ factura.tipo }}</td>
                             <td class="text-right">{{ factura.importeTotal }}</td>
-                            <td id="estado-{{ factura.id }}">{% if datos.usa_facturacion_electronica %}{{ factura.estado }}{% else %}No Aplica{% endif %}</td>
+                            <td id="estado-{{ factura.id }}">
+                                {% if datos.usa_facturacion_electronica %}
+                                    {% if factura.tipo == "FACTURA" %}
+                                        {{ factura.estado }}
+                                    {% else %}
+                                        NO APLICA
+                                    {% endif %}
+                                {% else %}
+                                    NO APLICA
+                                {% endif %}
+                            </td>
                             <td class="text-center">
                             {% if datos.usa_facturacion_electronica %}
                                 {% if not factura.firmado %}
@@ -61,18 +71,20 @@
                             {% endif %}
                             </td>
                             <td class="text-center">
-                                <a class="btn btn-primary" href="/fac/ride/?clave={{ factura.clave_acceso }}"><i class="fa fa-print"></i></a>
+                                <a class="btn btn-primary" target="_blank" href="/fac/ride/?clave={{ factura.clave_acceso }}"><i class="fa fa-print"></i></a>
                             {% if datos.usa_facturacion_electronica %}
                                 {% if factura.enviado == False %}
-                                <button class="btn btn-danger" id="{{ factura.clave_acceso }}" onclick="autorizar('{{ factura.clave_acceso }}')">
-                                    <i class="fa fa-file-o"></i> Por Autorizar</button>{% else %}
-                                {% if factura.estado %}
-                                <a class="btn btn-success" href="/media/autorizados/{{ factura.clave_acceso }}.xml"><i class="fa fa-files-o"></i></a>
-                                <a class="btn btn-warning" href="/media/autorizados/{{ factura.clave_acceso }}.json"><i class="fa fa-file-excel-o"></i></a>
-                                <a class="btn btn-danger" href="/consulta?fac={{ factura.clave_acceso }}"><i class="fa fa-file-code-o"></i></a>
+                                        {% if factura.tipo == "FACTURA" %}
+                                            <button class="btn btn-danger" id="{{ factura.clave_acceso }}" onclick="autorizar('{{ factura.clave_acceso }}')">
+                                            <i class="fa fa-file-o"></i> Por Autorizar</button>
+                                        {% endif %}
+                                {% else %}
+                                    {% if factura.estado %}
+                                        <a class="btn btn-success" target="_blank" href="/media/autorizados/{{ factura.clave_acceso }}.xml"><i class="fa fa-files-o"></i></a>
+                                        <a class="btn btn-warning" target="_blank" href="/media/autorizados/{{ factura.clave_acceso }}.json"><i class="fa fa-file-excel-o"></i></a>
+                                        <a class="btn btn-danger" target="_blank" href="/consulta?fac={{ factura.clave_acceso }}"><i class="fa fa-file-code-o"></i></a>
+                                    {% endif %}
                                 {% endif %}
-
-                            {% endif %}
                             {% endif %}
                             </td>
                         </tr>

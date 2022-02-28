@@ -1,8 +1,8 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="Mosaddek">
@@ -56,7 +56,7 @@
         <!--brand start-->
         <div class="navbar-brand pos-fixed">
             <a class="" href="/">
-                <img src="/static/assets/img/logo.png" srcset="/static/assets/img/logo@2x.jpg 2x" alt="CodeLab">
+                <img src="/media/{{ empresa.logotipo }}" style="height: 30px" alt="CodeLab">
             </a>
         </div>
         <!--brand end-->
@@ -103,9 +103,12 @@
                             <li><a href="{% url 'index' %}">Dashboard</a></li>
                             <li><a href="{% url 'productos' %}">Registro de Productos</a></li>
                             <li><a href="{% url 'clientes' %}">Registro de Clientes</a></li>
+                            <li><a href="/fact/?type=factura">Facturación</a></li>
+                            <li><a href="/fact/?type=proforma">Proformas</a></li>
+                            <li><a href="{% url 'listaFacturas' %}">Lista de Fact. Prof.</a></li>
                             <li><a href="{% url 'orden_trabajo' %}">Ordenes de Trabajo</a></li>
-                            <li><a href="{% url 'facturacion' %}">Facturación</a></li>
-                            <li><a href="{% url 'listaFacturas' %}">Lista de Facturas</a></li>
+                            <li><a href="{% url 'cuentasCobrar' %}">Ctas. por Cobrar</a></li>
+
                             <li><a href="{% url 'logout' %}">Cerrar Sesión</a></li>
                         </ul>
                     </li>

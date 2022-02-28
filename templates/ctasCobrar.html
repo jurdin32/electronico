@@ -1,0 +1,260 @@
+{% extends 'index.html' %}
+{% load productos %}
+{% load static %}
+{% load mathfilters %}
+{% block cabecera %}
+    <div class="row">
+        <div class="col-xl-12 col-sm-12">
+            <div class="card mb-4 bg-purple">
+                <div class="card-body">
+                    <div class="media d-flex align-items-center ">
+                        <div class="mr-4 rounded-circle bg-white sr-icon-box text-purple">
+                            <i class="vl_shopping-bag2"></i>
+                        </div>
+                        <div class="media-body text-light">
+                            <h4 class="text-uppercase mb-0 weight500">CUENTAS POR COBRAR</h4>
+                            <span><strong>CLIENTE: </strong>{{ cuenta.documento.cliente.nombres_apellidos }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block principal %}
+        <div class="card card-shadow mb-4" style="padding: 20px">
+            <div class="card-header border-0">
+                <div class="custom-title-wrap bar-primary">
+                    <div class="custom-title">Cuenta por Cobrar</div>
+                </div>
+            </div>
+            <div class="card-body- pt-3 pb-4">
+                <div class="table-responsive">
+                    <table id="tablaCuentas" class="table table-bordered table-striped" cellspacing="0">
+                        <thead class="bg-purple">
+                        <th class="text-lg-center text-white">Id</th>
+                        <th class="text-white">Cliente</th>
+                        <th class="text-white">Subtotal</th>
+                        <th class="text-white">I.V.A.</th>
+                        <th class="text-white">Total</th>
+                        <th class="text-lg-center text-white">Documento</th>
+                        <th class="text-lg-center text-white">Estado</th>
+                        <th class="text-lg-center text-white"><i class="fa fa-file-archive-o"></i></th>
+                        </thead>
+                        <tbody>
+                        {% if cuenta %}
+                            <tr style="cursor: pointer">
+                                <td>{{ cuenta.id }}</td>
+                                <td>{{ cuenta.documento.cliente.nombres_apellidos }}</td>
+                                <td>{{ cuenta.documento.totalSinImpuestos }}</td>
+                                <td>{{ cuenta.documento.iva }}</td>
+                                <td>{{ cuenta.documento.importeTotal }}</td>
+                                <td>{{ cuenta.estado }}</td>
+                                <td>{{ cuenta.detalle }}</td>
+                                <td><a target="_blank"
+                                       href="/fac/ride/?clave={{ cuenta.documento.clave_acceso }}">Ver</a></td>
+                            </tr>
+                        {% else %}
+                            {% for cuenta in cuentas %}
+                                <tr style="cursor: pointer">
+                                    <td>{{ cuenta.id }}</td>
+                                    <td>
+                                        <a href="/counts/?id={{ cuenta.id }}">{{ cuenta.documento.cliente.nombres_apellidos }}</a>
+                                    </td>
+                                    <td>{{ cuenta.documento.totalSinImpuestos }}</td>
+                                    <td>{{ cuenta.documento.iva }}</td>
+                                    <td>{{ cuenta.documento.importeTotal }}</td>
+                                    <td>{{ cuenta.estado }}</td>
+                                    <td>{{ cuenta.detalle }}</td>
+                                    <td><a target="_blank"
+                                           href="/fac/ride/?clave={{ cuenta.documento.clave_acceso }}">Ver</a></td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="7">Click sobre el nombre para seleccionar</td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% if detalles %}
+        <div class="card card-shadow mb-4" style="padding: 20px">
+            <div class="card-body- pt-3 pb-4">
+                <div class="table-responsive">
+                    <table id="tablaDetalles" class="table table-bordered table-striped" cellspacing="0">
+                        <thead class="bg-purple">
+                        <th class="text-lg-center text-white">Fecha</th>
+                        <th class="text-lg-center text-white">Documento</th>
+                        <th class="text-lg-center text-white">Secuencial</th>
+                        <th class="text-lg-center text-white">Saldo Anterior</th>
+                        <th class="text-lg-right text-white">Abono</th>
+                        <th class="text-lg-right text-white">Por Pagar</th>
+                        <th class="text-lg-center text-white"><i class="fa fa-file-archive-o"></i></th>
+                        </thead>
+                        <tbody>
+                        {% for detalle in detalles %}
+                            <tr style="cursor: pointer">
+                                <td style="text-align: center">{{ detalle.fecha|date:"d/m/Y" }}</td>
+                                <td style="text-align: center">{{ detalle.cuenta.documento.secuencial }}</td>
+                                <td style="text-align: center">{{ detalle.no_abono }}</td>
+                                <td style="text-align: center">{{ detalle.saldo_anterior }}</td>
+                                <td style="text-align: right">{{ detalle.abono }}</td>
+                                <td style="text-align: right">{{ detalle.por_pagar }}</td>
+                                <td style="text-align: center"><a target="_blank" href="/recibe/?id={{ detalle.id }}">Ver</a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        {% if cuenta %}
+        <div class="offset-6 col-xl-3 col-sm-3">
+            <div class="card mb-4 bg-warning">
+                <div class="card-body">
+                    <a href="/counts/" style="cursor:pointer;">
+                        <div class="media d-flex align-items-center ">
+                            <div class="mr-4 rounded-circle bg-white sr-icon-box text-warning">
+                                <i class="fa fa-backward"></i>
+                            </div>
+                            <div class="media-body text-light">
+                                <h4 class="text-uppercase mb-0 weight500"
+                                    style="cursor:pointer;">Volver</h4>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="{% if not cuenta %}offset-9{% endif %} col-xl-3 col-sm-3">
+            <div class="card mb-4 bg-secondary">
+                <div class="card-body">
+                    <a data-toggle="modal" data-target="#registrarAbono" style="cursor:pointer;">
+                        <div class="media d-flex align-items-center ">
+                            <div class="mr-4 rounded-circle bg-white sr-icon-box text-secondary">
+                                <i class="fa fa-save"></i>
+                            </div>
+                            <div class="media-body text-light">
+                                <h4 class="text-uppercase mb-0 weight500"
+                                    style="cursor:pointer;">Registrar</h4>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    {% if cuenta %}
+        <div class="modal fade" id="registrarAbono" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <form action="/counts/abono/" method="post">
+            {% csrf_token %}
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titulo">Ingresar Abono</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="cuenta" value="{{ cuenta.id }}">
+                    <input type="number" required="required" min="1" step="0.01" id="abono" name="abono" class="form-control">
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Registar Abono</button>
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+    {% else %}
+        <div class="modal fade" id="registrarAbono" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titulo">Seleccione un Documento</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table id="tdocumentos" class="table table-bordered table-striped" cellspacing="0">
+                        <thead class="bg-success text-white">
+                        <th style="text-align: center">Id</th>
+                        <th style="text-align: center">Tipo</th>
+                        <th style="text-align: center">Secuencial</th>
+                        <th>Razón Social</th>
+                        <th style="text-align: right;">Subtotal</th>
+                        <th style="text-align: right;">IVA</th>
+                        <th style="text-align: right;">Total</th>
+                        </thead>
+                        <tbody>
+                        {% for documento in documentos %}
+                        <tr>
+                            <td style="text-align: center">{{ documento.id }}</td>
+                            <td style="text-align: center">{{ documento.tipo }}</td>
+                            <td style="text-align: center"><a href="/register/counts/{{ documento.id }}/">{{ documento.secuencial }}</a></td>
+                            <td>{{ documento.cliente.nombres_apellidos }}</td>
+                            <td style="text-align: right">{{ documento.totalSinImpuestos }}</td>
+                            <td style="text-align: right">{{ documento.iva }}</td>
+                            <td style="text-align: right">{{ documento.importeTotal }}</td>
+                        </tr>                        
+                        {% endfor %}
+                        
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <label for="">Click sobre el secuencial para registrar por cobrar</label>
+                </div>
+            </div>
+        </div>
+    </div>
+        {{ messages }}
+    {% endif %}
+
+{% endblock %}
+{% block script %}
+    <script src="{% static 'assets/vendor/data-tables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'assets/vendor/data-tables/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'alert/alertas.js' %}"></script>
+    <script>
+        $('#tablaCuentas').dataTable(
+
+        )
+        $('#tablaDetalles').dataTable(
+
+        )
+        $('#tdocumentos').dataTable(
+
+        )
+    </script>
+    {% if mensaje %}
+        <script>
+            notificacion(2000, 'success', '{{mensaje}}', '')
+        </script>
+    {% endif %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <script>
+                notificacion(2000,'{{ message.tags }}','{{ message }}','')
+            </script>
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

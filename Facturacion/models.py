@@ -6,6 +6,7 @@ from django.db import models
 class FormasPagos(models.Model):
     nombre = models.CharField(max_length=100)
     codigo = models.CharField(default=0, max_length=2)
+    estado = models.BooleanField(default=True)
 
     class Meta:
         verbose_name_plural = "1. Formas de Pago"
@@ -50,6 +51,7 @@ class Empresa(models.Model):
     contribuyente_especial=models.CharField(max_length=5,null=True,blank=True, help_text='minimo 3, maximo 5')
     obligado_llevar_contabilidad=models.CharField(max_length=2, choices=(("SI","SI"),("NO","NO")))
     logotipo=models.ImageField(upload_to='logotipo',null=True,blank=True)
+    encabezado=models.ImageField(upload_to='encabezado',null=True,blank=True)
     tipo_emision=models.CharField(max_length=1,default=1)
     estado=models.BooleanField(default=True)
 
@@ -73,6 +75,7 @@ class Webservices(models.Model):
 class DatosFacturacion(models.Model):
     empresa=models.ForeignKey(Empresa,on_delete=models.CASCADE,null=True,blank=True)
     secuencial=models.IntegerField(default=0)
+    secuencial_proforma=models.IntegerField(default=0)
     secual_orden_trabajo=models.IntegerField(default=1)
     ambiente=models.IntegerField(default=1)
     certificado=models.FileField(upload_to='certificados',null=True,blank=True)

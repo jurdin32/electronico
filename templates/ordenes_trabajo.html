@@ -64,7 +64,7 @@
                     </thead>
                     <tbody>
                     {% for orden in ordenes %}
-                        <tr ondblclick="seleccionar(this,{{ orden.cliente.id }},'{{ orden.dispositivo_recibido }}','{{ orden.marca_modelo }}','{{ orden.password }}','{{ orden.numero_serie }}','{{ orden.cables_accesorios }}','{{ orden.problema_reportado }}','{{ observaciones }}','{{ orden.tareas_a_realizar }}','{{ orden.total|floatformat:2 }}','{{ orden.abono|floatformat:2 }}','{{ orden.total_cobrar|floatformat:2 }}')" style="cursor: pointer">
+                        <tr ondblclick="seleccionar(this,{{ orden.cliente.id }},'{{ orden.dispositivo_recibido }}','{{ orden.marca_modelo }}','{{ orden.password }}','{{ orden.numero_serie }}','{{ orden.cables_accesorios }}','{{ orden.problema_reportado }}','{{ orden.observaciones }}','{{ orden.tareas_a_realizar }}','{{ orden.total|floatformat:2 }}','{{ orden.abono|floatformat:2 }}','{{ orden.total_cobrar|floatformat:2 }}')" style="cursor: pointer">
                             <td class="text-lg-center">{{ orden.id }}</td>
                             <td class="text-lg-center">{{ orden.fecha|date:"d-m-Y" }}</td>
                             <td>{{ orden.secuencial }}</td>
@@ -248,7 +248,7 @@
         $("#numero_serie").val(numero_serie)
         $('#cables_accesorios').val(cables_accesorios)
         $('#problema_reportado').val(problema_reportado)
-        $('#observaciones').val(observaciones)
+        $('#observaciones').text(observaciones)
         $('#solucion').val(solucion)
         $('#total').val(parseFloat(total.replace(",",".")).toFixed(2))
         $('#abono').val(parseFloat(abono.replace(",",".")).toFixed(2))

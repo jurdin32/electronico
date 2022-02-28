@@ -11,8 +11,14 @@
                             <i class="vl_shopping-bag2"></i>
                         </div>
                         <div class="media-body text-light">
-                            <h4 class="text-uppercase mb-0 weight500">PANEL DE FACTURACIÓN</h4>
-                            <span>AMBIENTE: {% if ambiente == 1 %}PRUEBAS{% else %}PRODUCCIÓN{% endif %} </span>
+                            {% if tipo == 'factura'%}
+                                <h4 class="text-uppercase mb-0 weight500">PANEL DE FACTURACIÓN</h4>
+                                <span>AMBIENTE: {% if ambiente == 1 %}PRUEBAS{% else %}PRODUCCIÓN{% endif %} </span>
+                            {% else %}
+                                <h4 class="text-uppercase mb-0 weight500">PANEL DE COTIZACIONES</h4>
+                                <span>PROFORMAS</span>
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>
@@ -28,7 +34,12 @@
                         <div class="media-body text-light">
                             <h4 class="text-uppercase mb-0 weight500 numero" style="font-weight: bold">
                                 {{ establecimiento }}{{ puntoEmision }}{{ secuencial }}</h4>
-                            <span>NÚMERO DE FACTURA</span><br>
+                            {% if tipo == 'factura'%}
+                                <span>NÚMERO DE FACTURA</span><br>
+                            {% else %}
+                                <span>NÚMERO DE PROFORMA</span><br>
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>
@@ -59,7 +70,14 @@
                             <button class="btn btn-outline-secondary" onclick="removerCliente()" type="button"
                                     title="Limpiar Campos"><i
                                     class="fa fa-minus-circle"></i></button>
+                            <select name="fpago" id="fpago" class="form-control">
+                                {% for fpago in formasPago %}
+                                    <option value="{{ fpago.id }}">{{ fpago.nombre }}</option>
+                                {% endfor %}
+
+                            </select>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -403,9 +421,18 @@
 
         function registrarFactura() {
             count = $('#tablaProductos>tbody tr').length;
+            let tipo=""
+            {% if tipo == "factura" %}
+                tipo="FACTURA"
+            {% else %}
+                tipo="PROFORMA"
+            {% endif %}
             if (sessionStorage.getItem('cliente') && count > 0) {
                 $.get('{% url "registroFactura" %}', {
-                    secuencial: '{{ secuencial }}', id_cliente: $("#cliente_id").val(),
+                    tipo:tipo,
+                    secuencial: '{{ secuencial }}',
+                    fpago:$("#fpago").val(),
+                    id_cliente: $("#cliente_id").val(),
                     totalSinImpuestos: $(".subtotal").text(), iva: $(".iva").text(),
                     importeTotal: $(".total").text()
                 }, function (numero) {
@@ -419,9 +446,9 @@
                         }, 2000)
                     }
                 });
-                notificacion(5000, 'success', 'La factura se genero correctamente..!', '/fact/')
+                notificacion(5000, 'success', 'La factura se genero correctamente..!', '/fact/?type={{ tipo }}')
             } else {
-                notificacion(1000, 'error', 'El Cliente y los productos son necesarios..!', '/fact/')
+                notificacion(1000, 'error', 'El Cliente y los productos son necesarios..!', '/fact/?type={{ tipo }}')
             }
 
         }
@@ -477,7 +504,7 @@
                     cantidad: dato,
                 }
                 localStorage.setItem($(this).data('id'), JSON.stringify(datos))
-                window.location.href = '/fact/'
+                window.location.href = '/fact/?type={{ tipo }}'
             }
         })
 

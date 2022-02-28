@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from Facturacion.views import enviar_sri, consulta_comprobantes, facturacion, registroFactura, registroDetalles, \
-    facturas, firmar_documento, ride
+    facturas, firmar_documento, ride, cuentasCobrar, registarAbono, recibo, registar_cuenta
 from Inicio.views import index, LoginView, LogoutView
 from OrdenesTrabajo.views import ordenes_trabajo
 from Personas.views import clientes, buscar_cliente
@@ -29,6 +29,11 @@ urlpatterns = [
     path('fac/details/',registroDetalles,name='registroDetalles'),
     path('fac/signed/',firmar_documento,name='firmar'),
     path('fac/ride/',ride,name='ride'),
+
+    path('counts/',cuentasCobrar,name='cuentasCobrar'),
+    path('register/counts/<int:id>/',registar_cuenta),
+    path('counts/abono/',registarAbono,name='abono'),
+    path('recibe/',recibo,name='recibo'),
 
     path('envelop_sri/',enviar_sri,name="enviar_sri"),
     path('consulta/',consulta_comprobantes),

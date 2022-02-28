@@ -41,6 +41,7 @@ def clientes(request):
         cliente.save()
     contexto={
         'clientes':Clientes.objects.filter(empresa__usuario=request.user),
-        'mensaje':mensaje
+        'mensaje':mensaje,
+        'empresa':empresa,
     }
     return render(request,'clientes.html',contexto)

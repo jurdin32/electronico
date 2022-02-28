@@ -8,6 +8,7 @@
 <table>
     <tr>
         <td style="line-height: 15px; border: black 1px solid; padding-left: 5px; padding: 5px" colspan="5">
+            {% if factura.tipo == "FACTURA" %}
             <span style="font-weight: bold">RUC: </span><span>{{ factura.empresa.ruc }}</span><br>
             <span style="font-weight: bold">FACTURA</span><br>
             <span>No. {{ factura.empresa.codigo_establecimiento_emisior }}-{{ factura.empresa.punto_emision_establecimiento }}-{{ factura.secuencial }}</span><br>
@@ -18,15 +19,25 @@
             <span>EMISIÓN: NORMAL</span><br>
             <span style="font-weight: bold;">CLAVE DE ACCESO</span><br>
             <span>{{ factura.clave_acceso }}</span><br>
+            {% else %}
+                <img src="http://electronico.bit-ec.com/media/{{ factura.empresa.logotipo }}" height="100px" alt=""><br>
+                <span style="font-weight: bold">RUC: </span><span>{{ factura.empresa.ruc }}</span><br>
+                <span style="font-weight: bold">PROFORMA</span><br>
+                <span><strong>No.</strong> {{ factura.empresa.codigo_establecimiento_emisior }}-{{ factura.empresa.punto_emision_establecimiento }}-{{ factura.secuencial }}</span><br>
+                <span><strong>EMISIÓN:</strong> NORMAL</span><br>
+            {% endif %} 
+
         </td>
         <td style="line-height: 15px; border: black 1px solid; padding-left: 5px; padding: 5px" colspan="5">
-                <span>{{ factura.empresa.razon_social_nombres_apellidos }}</span><br>
-                <span>{{ factura.empresa.nombre_comercial }}</span><br>
-                <span>DIRECCIÓN MATRIZ:</span>
-                <span>{{ factura.empresa.direccion_establecimiento_matriz }}</span><br>
-                <span>DIRECCIÓN SUCURSAL:</span>
-                <span>{{ factura.empresa.direccion_establecimiento_emisor }}</span><br>
-                <span>OBLIGADO A LLEVAR CONTABILIDAD: {{ factura.empresa.obligado_llevar_contabilidad }}</span>
+            {% if factura.tipo == "FACTURA" %}
+                <img src="http://electronico.bit-ec.com/media/{{ factura.empresa.logotipo }}" height="100px" alt=""><br>
+            {% endif %}
+            <span style="text-align: center; font-weight: bold">{{ factura.empresa.razon_social_nombres_apellidos }}</span><br>
+            <span style="font-weight: bold">DIRECCIÓN MATRIZ:</span>
+            <span>{{ factura.empresa.direccion_establecimiento_matriz }}</span><br>
+            <span style="font-weight: bold">DIRECCIÓN SUCURSAL:</span>
+            <span>{{ factura.empresa.direccion_establecimiento_emisor }}</span><br>
+            <span><strong>OBLIGADO A LLEVAR CONTABILIDAD: </strong>{{ factura.empresa.obligado_llevar_contabilidad }}</span>
         </td>
     </tr>
     <tr></tr>
@@ -82,13 +93,21 @@
         <td colspan="6" rowspan="6">
             <table>
                 <tr>
+                    {% if factura.tipo == "FACTURA"%}
                     <td style="padding: 3px; border: black 1px solid; text-align: center">Forma de pago</td>
                     <td style="padding: 3px; border: black 1px solid; text-align: right">Valor</td>
+                    {% else %}
+                    <td colspan="2" style="padding: 3px; border: black 1px solid; text-align: center">Validez</td>
+                    {% endif %}
                     <td></td>
                 </tr>
                 <tr>
-                    <td style="padding: 3px; border: black 1px solid; width: 70%">1. Sin utilizacion del sistema financiero</td>
+                    {% if factura.tipo == "FACTURA"%}
+                    <td style="padding: 3px; border: black 1px solid; width: 70%">{{ factura.formaPago.codigo }} {{ factura.formaPago.nombre }}</td>
                     <td style="padding: 3px; border: black 1px solid; text-align: right">{{ factura.importeTotal }}</td>
+                    {% else %}
+                    <td colspan="2" style="padding: 3px; border: black 1px solid; text-align: right">Válido por 30 días, los precios podrian variar dependiendo el tipo de servicio, todos los productos detallados aquí ya tienen el IVA incluido</td>
+                    {% endif %}
                     <td></td>
                 </tr>
             </table>

@@ -1,7 +1,15 @@
+#!/usr/bin/python
+#-*- coding: utf-8 -*-
+
+import os, sys
 import datetime
 import subprocess
+from xml.dom.minidom import parseString
+
+import qrcode
 import zeep as zeep
 from dicttoxml import dicttoxml
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.http import HttpResponse, HttpResponseRedirect
@@ -9,8 +17,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 # Create your views here.
 from django.shortcuts import render
 
-from DocumentosElectronicos.models import Factura, DetallesFactura
-from Facturacion.models import DatosFacturacion, Webservices
+from DocumentosElectronicos.models import Factura, DetallesFactura, CuentaCobrar, DetalleCuentasCobrar
+from Facturacion.models import DatosFacturacion, Webservices, Empresa, FormasPagos
 from Facturacion.script import modulo_11
 from Productos.models import Kardex, Producto
 from electronico.snniper import render_to_pdf
@@ -104,7 +112,7 @@ def generarFactura(factura_id):
     infoFactura.setdefault('importeTotal', round(total,2))  # suma total
     infoFactura.setdefault('moneda', 'DOLAR')
     infoFactura.setdefault('pagos', {'pago': {
-        'formaPago': '01',  # forma de pago segun la tabla 24
+        'formaPago': factura.formaPago.codigo,  # forma de pago segun la tabla 24
         'total': round(total,2),
         'plazo': 1,  # plazo en dias
         'unidadTiempo': 'dias'
@@ -129,7 +137,8 @@ def generarFactura(factura_id):
         "b'", "").replace(">'", ">").replace('val3', detalles).replace("<item>","<totalImpuesto>").replace("</item>","</totalImpuesto>")
     path = '%s/xml/%s.xml' % (datos_factura.ruta_home_media,clave_acceso)
     xml = open(path, 'w')
-    xml.write(factura)
+    factura = parseString(factura)
+    xml.write(factura.toprettyxml())
     xml.close()
 
 
@@ -201,20 +210,31 @@ def consulta_comprobantes(request):
             factura.save()
         except:
             print(json)
+        print(json)
     return HttpResponseRedirect('/fac/list/')
 
 @login_required(login_url='login')
 def facturacion(request):
+    cantidad=0
+    secuencial=""
     datos_factura = DatosFacturacion.objects.get(empresa__usuario=request.user)
-    cantidad = Factura.objects.count()
-    secuencial = str.zfill(str(datos_factura.secuencial + cantidad + 1), 9)
+    if request.GET.get('type')=='factura':
+        cantidad = Factura.objects.filter(tipo="FACTURA").count()
+        secuencial = str.zfill(str(datos_factura.secuencial + cantidad + 1), 9)
+    else:
+        cantidad = Factura.objects.filter(tipo="PROFORMA").count()
+        secuencial = str.zfill(str(datos_factura.secuencial_proforma + cantidad + 1), 9)
+
     contexto = {
         'datos':datos_factura.usa_facturacion_electronica,
         'secuencial': secuencial,
         'establecimiento': datos_factura.empresa.codigo_establecimiento_emisior,
         'puntoEmision': datos_factura.empresa.punto_emision_establecimiento,
         'ambiente': datos_factura.ambiente,
-        'productos':Producto.objects.filter(empresa__usuario=request.user, estado=True)
+        'productos':Producto.objects.filter(empresa__usuario=request.user, estado=True),
+        'tipo':request.GET.get('type'),
+        'empresa': Empresa.objects.get(usuario=request.user),
+        'formasPago':FormasPagos.objects.filter(estado=True),
     }
     return render(request, 'facturacion.html', contexto)
 
@@ -222,6 +242,8 @@ def facturacion(request):
 def registroFactura(request):
     datos = DatosFacturacion.objects.get(empresa__usuario=request.user)
     fac = Factura.objects.create(
+        tipo=request.GET.get('tipo'),
+        formaPago_id=request.GET.get('fpago'),
         secuencial=request.GET.get('secuencial'),
         cliente_id=request.GET.get('id_cliente'),
         empresa_id=datos.empresa_id,
@@ -266,6 +288,7 @@ def facturas(request):
     contexto = {
         'facturas': Factura.objects.filter(empresa__usuario=request.user),
         'datos':DatosFacturacion.objects.get(empresa__usuario=request.user),
+        'empresa': Empresa.objects.get(usuario=request.user),
     }
     return render(request, 'facturas.html', contexto)
 
@@ -294,3 +317,65 @@ def ride(request):
     }
     #return render(request,'ride.html',contexto)
     return render_to_pdf('ride.html',contexto)
+
+def cuentasCobrar(request):
+    cuentas=CuentaCobrar.objects.filter(documento__empresa__usuario=request.user)
+    cuenta=None
+    if request.GET.get('id'):
+        cuenta=cuentas.get(id=request.GET.get('id'))
+
+    contexto={
+        'cuentas':cuentas,
+        'detalles':DetalleCuentasCobrar.objects.filter(cuenta_id=request.GET.get('id')),
+        'cuenta':cuenta,
+        'documentos':Factura.objects.filter(empresa__usuario=request.user)
+    }
+    return render(request, 'ctasCobrar.html',contexto)
+
+def registar_cuenta(request,id):
+    cuenta=CuentaCobrar.objects.create(documento_id=id)
+    cuenta.save()
+    messages.add_message(request, messages.SUCCESS, 'La Cuenta se registro Correctamente..!')
+    return HttpResponseRedirect("/counts/?id=%s"%cuenta.id)
+
+def crearQr(documento,anterior,abono,saldo,cliente):
+    img = qrcode.make("DOCUMENTO FIRMADO ELECTRONICAMENTE\nJOHNNY EDGAR URDIN GONZALEZ\nRUC: 0703886697\nREGISTRO DEL CREDITO PARA EL CLIENTE: %s\nFECHA: %s\nSALDO ANTERIOR %s\nABONO: %s\nPOR PAGAR: %s\nESTADO DEL DOCUMENTO: PAGADO"%(cliente,datetime.datetime.now(),anterior,abono,saldo))
+    f = open("/mnt/07EBF45679F193CD/var/www/electronico/media/codigoQR/%s.png"%documento, "wb")
+    img.save(f)
+    f.close()
+
+def registarAbono(request):
+    if request.POST:
+        print(request.POST)
+        cuenta=CuentaCobrar.objects.get(id=request.POST.get('cuenta'))
+        detalles= DetalleCuentasCobrar.objects.filter(cuenta=cuenta)
+        cant=detalles.count()+1
+        por_pagar=0
+        anterior=0
+        if cant==1:
+            anterior=float(cuenta.documento.importeTotal)
+            por_pagar = float(cuenta.documento.importeTotal) - float(request.POST.get('abono'))
+        else:
+            anterior=detalles.last().por_pagar
+            por_pagar = float(anterior) - float(request.POST.get('abono'))
+
+        abono=DetalleCuentasCobrar.objects.create(
+            cuenta=cuenta,
+            abono=request.POST.get('abono'),
+            no_abono = "%s-%s" % (cuenta.documento.secuencial, cant),
+            por_pagar=por_pagar,
+            pago_no=cant,
+            saldo_anterior=anterior,
+        )
+        abono.save()
+        crearQr(abono.no_abono,abono.saldo_anterior,abono.abono,abono.por_pagar,abono.cuenta.documento.cliente.nombres_apellidos)
+        messages.add_message(request, messages.SUCCESS, 'El Abono se registro Correctamente..!')
+    return HttpResponseRedirect("/counts/?id=%s"%cuenta.id)
+
+def recibo(request):
+    contexto={
+        'cuenta':DetalleCuentasCobrar.objects.get(id=request.GET.get('id')),
+    }
+    return render_to_pdf('recibo.html',contexto)
+
+

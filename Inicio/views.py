@@ -8,6 +8,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from DocumentosElectronicos.models import Factura
+from Facturacion.models import Empresa
 
 meses=[
     'Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'
@@ -33,13 +34,14 @@ def LogoutView(request):
 @login_required(login_url='login')
 def index(request):
     fecha_actual=datetime.datetime.now()
-    facturas=Factura.objects.filter(empresa__usuario=request.user, fecha__month=fecha_actual.month)
+    facturas=Factura.objects.filter(empresa__usuario=request.user, fecha__month=fecha_actual.month,tipo="FACTURA")
     print(facturas.filter(fecha=fecha_actual.date()).values('fecha').annotate(Sum('importeTotal')))
     contexto={
         'facturas':facturas.values('fecha').annotate(Sum('importeTotal')),
         'deldia':facturas.filter(fecha=fecha_actual.date()).values('fecha').annotate(Sum('importeTotal')),
         'mes':meses[fecha_actual.month-1],
-        'año':fecha_actual.year
+        'año':fecha_actual.year,
+        'empresa':Empresa.objects.get(usuario=request.user),
 
     }
 
