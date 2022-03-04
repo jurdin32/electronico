@@ -64,6 +64,8 @@ class DetalleCuentasCobrar(models.Model):
     abono=models.DecimalField(max_digits=9, decimal_places=2, default=0)
     por_pagar=models.DecimalField(max_digits=9, decimal_places=2, default=0)
     pago_no=models.IntegerField(default=0)
+    tipo=models.CharField(max_length=120, null= True, blank=True)
+    detalle=models.CharField(max_length=500, null= True, blank=True)
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):

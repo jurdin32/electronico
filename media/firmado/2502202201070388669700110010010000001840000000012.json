@@ -1,0 +1,20 @@
+{
+    'estado': 'RECIBIDA',
+    'comprobantes': None
+}    'comprobante': [
+            {
+                'claveAcceso': '2502202201070388669700110010010000001840000000012',
+                'mensajes': {
+                    'mensaje': [
+                        {
+                            'identificador': '70',
+                            'mensaje': 'CLAVE DE ACCESO EN PROCESAMIENTO ',
+                            'informacionAdicional': 'La clave de acceso 2502202201070388669700110010010000001840000000012  esta en procesamiento VALOR DEVUELTO POR EL PROCEDIMIENTO: SI',
+                            'tipo': 'ERROR'
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

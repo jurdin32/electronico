@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
     'mathfilters',
     'django_crontab',
     'Facturacion',
@@ -128,11 +130,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-#STATIC_ROOT='/mnt/07EBF45679F193CD/var/www/electronico/static'
+STATIC_ROOT='/mnt/07EBF45679F193CD/var/www/electronico/static'
 
-STATICFILES_DIRS=[
-   'static',
-]
+# STATICFILES_DIRS=[
+#    'static',
+# ]
 
 MEDIA_URL='/media/'
 MEDIA_ROOT="/mnt/07EBF45679F193CD/var/www/electronico/media"
@@ -141,6 +143,15 @@ MEDIA_ROOT="/mnt/07EBF45679F193CD/var/www/electronico/media"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
+
 
 CRONJOBS = [
     # Ejecuta comandos todas las mañanas a las 6 a.m.

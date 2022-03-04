@@ -1,14 +1,14 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from Facturacion.views import enviar_sri, consulta_comprobantes, facturacion, registroFactura, registroDetalles, \
-    facturas, firmar_documento, ride, cuentasCobrar, registarAbono, recibo, registar_cuenta
+from Facturacion.views import *
 from Inicio.views import index, LoginView, LogoutView
 from OrdenesTrabajo.views import ordenes_trabajo
 from Personas.views import clientes, buscar_cliente
 from Productos.views import registro_productos
+from api.url import router
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -37,4 +37,10 @@ urlpatterns = [
 
     path('envelop_sri/',enviar_sri,name="enviar_sri"),
     path('consulta/',consulta_comprobantes),
+
+    #api
+    path('api-auth/', include('rest_framework.urls')),
+    path('api/', include(router.urls)),
+
+
 ]+static(settings.MEDIA_URL, document_root= settings.MEDIA_ROOT)
