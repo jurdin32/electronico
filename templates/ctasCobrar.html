@@ -170,7 +170,17 @@
                 </div>
                 <div class="modal-body">
                     <input type="hidden" name="cuenta" value="{{ cuenta.id }}">
+                    <label for="">Monto a Abonar</label>
                     <input type="number" required="required" min="1" step="0.01" id="abono" name="abono" class="form-control">
+                    <label for="">Seleccione el tipo de Transacción</label>
+                    <select name="tipo" id="tipo" class="form-control">
+                        <option value="EFECTIVO">EFECTIVO</option>
+                        <option value="TRANSFERENCIA">TRANSFERENCIA</option>
+                        <option value="TARJETA DE DEBITO">TARJETA DE DEBITO</option>
+                        <option value="TARJETA DE CREDITO">TARJETA DE CREDITO</option>
+                    </select>
+                    <label for="">Ingrese detalles adicionales de la transacción</label>
+                    <input type="text" required="required"  id="detalle" name="detalle" class="form-control">
                 </div>
                 <div class="modal-footer">
                     <button type="reset" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>

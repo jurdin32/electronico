@@ -366,6 +366,8 @@ def registarAbono(request):
             por_pagar=por_pagar,
             pago_no=cant,
             saldo_anterior=anterior,
+            tipo=request.POST.get('tipo'),
+            detalle=request.POST.get('detalle'),
         )
         abono.save()
         crearQr(abono.no_abono,abono.saldo_anterior,abono.abono,abono.por_pagar,abono.cuenta.documento.cliente.nombres_apellidos)
