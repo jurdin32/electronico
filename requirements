@@ -13,7 +13,7 @@ future==0.18.2
 html5lib==1.1
 idna==3.3
 isodate==0.6.0
-lxml==4.6.3
+#lxml==4.6.3
 Pillow==8.4.0
 platformdirs==2.4.0
 PyPDF2==1.26.0
