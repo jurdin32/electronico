@@ -130,14 +130,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT='static'
+STATIC_ROOT='/mnt/07EBF45679F193CD/var/www/electronico/static'
 
-STATICFILES_DIRS=[
-   'static',
-]
+# STATICFILES_DIRS=[
+#    'static',
+# ]
 
 MEDIA_URL='/media/'
-MEDIA_ROOT="media"
+MEDIA_ROOT="/mnt/07EBF45679F193CD/var/www/electronico/media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

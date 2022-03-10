@@ -3,6 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 from Facturacion.models import Empresa, DatosFacturacion
 from OrdenesTrabajo.models import Orden
+from electronico.snniper import render_to_pdf
 
 
 def ordenes_trabajo(request):
@@ -50,3 +51,9 @@ def ordenes_trabajo(request):
         'mensaje':mensaje,
     }
     return render(request,'ordenes_trabajo.html',contexto)
+
+def orden(request,id):
+    contexto={
+        'orden':Orden.objects.get(id=id),
+    }
+    return render_to_pdf('orden.html',contexto)
