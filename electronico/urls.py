@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 
 from Facturacion.views import *
 from Inicio.views import index, LoginView, LogoutView
-from OrdenesTrabajo.views import ordenes_trabajo
+from OrdenesTrabajo.views import ordenes_trabajo, orden
 from Personas.views import clientes, buscar_cliente
 from Productos.views import registro_productos
 from api.url import router
@@ -22,6 +22,8 @@ urlpatterns = [
     path('search_client/',buscar_cliente, name='buscar_clientes'),
 
     path('orden_trabajo/',ordenes_trabajo,name='orden_trabajo'),
+    path('orden_trabajo/<int:id>/',orden,name='orden'),
+
 
     path('fact/',facturacion, name='facturacion'),
     path('fac/list/',facturas,name='listaFacturas'),
