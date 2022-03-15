@@ -328,7 +328,8 @@ def cuentasCobrar(request):
         'cuentas':cuentas,
         'detalles':DetalleCuentasCobrar.objects.filter(cuenta_id=request.GET.get('id')),
         'cuenta':cuenta,
-        'documentos':Factura.objects.filter(empresa__usuario=request.user)
+        'documentos':Factura.objects.filter(empresa__usuario=request.user),
+        'empresa': Empresa.objects.get(usuario=request.user),
     }
     return render(request, 'ctasCobrar.html',contexto)
 
