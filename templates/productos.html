@@ -164,7 +164,7 @@
                                 <div class="form-group row">
                                     <label for="inputPassword3" class="col-sm-3 col-form-label">Descripción </label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" name="descripcion" id="descripcion"
+                                        <input type="text" required  class="form-control" name="descripcion" id="descripcion"
                                                placeholder="Descripción">
                                     </div>
                                 </div>
@@ -172,7 +172,7 @@
                                     <label for="inputPassword3" class="col-sm-3 col-form-label">Precio Unitario </label>
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" name="precioUnitario"
-                                               id="precioUnitario" placeholder="Precio Unitario">
+                                               id="precioUnitario" required  placeholder="Precio Unitario">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -181,8 +181,11 @@
                                     <div class="col-sm-9">
                                         <select name="impuesto" id="impuesto" class="form-control">
                                             {% for impuesto in impuestos %}
-                                                <option value="{{ impuesto.id }}"
-                                                        porcentaje="{{ impuesto.porcentaje }}">{{ impuesto }}</option>
+						{%if impuesto.default %}
+						<option value="{{ impuesto.id }}"selected  porcentaje="{{ impuesto.porcentaje }}">{{ impuesto }}</option>
+						{%else%}
+                                                <option value="{{ impuesto.id }}" porcentaje="{{ impuesto.porcentaje }}">{{ impuesto }}</option>
+						{%endif%}
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -233,10 +236,13 @@
         </script>
     {% endif %}
     <script>
-        $('.cant').text(localStorage.length)
+        var impuestoIVA=0
+
+	$('.cant').text(localStorage.length)
         $(document).ready(function () {
             $('#tablaProductos').DataTable();
             $('.cant').text(localStorage.length)
+
         });
 
        {% comment %} $(".vender").click(function () {
@@ -287,21 +293,46 @@
             }
             $("#total").val(total)
             $("#impuesto option[value=" + impuesto + "]").attr("selected", true);
+            impuestoIVA=$("#impuesto").find(':selected').attr('porcentaje').replace(",",".")
             $("#editProducto").modal('show')
         }
 
         function calculoTotal(subtotal, porcentaje) {
             iva = subtotal * porcentaje
             total = subtotal + iva
-            $("#iva").val(iva.toFixed(2))
+            $("#iva").val(iva)
             $("#total").val(total.toFixed(2))
         }
 
         $("#impuesto").change(function () {
             porcentaje = this.options[this.selectedIndex].getAttribute("porcentaje").replace(",", ".")
+            impuestoIVA=porcentaje
+	    precio = $("#precioUnitario").val().replace(",", ".")
+            calculoTotal(parseFloat(precio), parseFloat(porcentaje))
+        }).change();
+	
+	 $("#precioUnitario").keydown(function () {
+            porcentaje = $("#impuesto").find(':selected').attr('porcentaje').replace(",",".");
+            console.log(impuestoIVA)
             precio = $("#precioUnitario").val().replace(",", ".")
             calculoTotal(parseFloat(precio), parseFloat(porcentaje))
         });
+
+
+        $("#precioUnitario").keyup(function () {
+            porcentaje = $("#impuesto").find(':selected').attr('porcentaje').replace(",",".");
+            console.log(impuestoIVA)
+	    precio = $("#precioUnitario").val().replace(",", ".")
+            calculoTotal(parseFloat(precio), parseFloat(porcentaje))
+        });
+
+
+
+
+
+
+
+
     </script>
 {% endblock %}
 

@@ -4,17 +4,296 @@
     <meta charset="UTF-8">
     <title>Orden de trabajo No: {{ orden.secuencial }}</title>
     <style>
-        @page {
-            size: A4;
-            margin: 0px;
-            margin-top: 0px;
+        tr{
+            padding-top: 2px;
+            padding-right: 1px;
         }
+        @page {
+        size: a4 landscape;
+        @frame header_frame{           /* Static Frame */
+            -pdf-frame-content: header_content1;
+            left: 0pt;
+            width:421pt;
+            top: 0pt;
+            height: 120pt;
+        }
+        @frame header_frame{           /* Static Frame */
+            -pdf-frame-content: header_content2;
+            left: 421pt;
+            width:421;
+            top: 0pt;
+            height: 120pt;
+        }
+        @frame content_frame {          /* Content Frame */
+            width: 100%;
+            top: 120pt;
+            height: 632pt;
+            font-size: 12px;
+        }
+        @frame footer_frame {           /* Another static Frame */
+            -pdf-frame-content: footer_content1;
+            left: 15pt;
+            rigth:10pt;
+            width: 421;
+            top: 570pt;
+            height: 20pt;
+        }
+        @frame footer_frame {           /* Another static Frame */
+            -pdf-frame-content: footer_content2;
+            left: 435pt;
+            rigth:20pt;
+            top: 570pt;
+            height: 20pt;
+        }
+    }
     </style>
 </head>
-<body style="background-color: #EBEDF0">
-{#    <img src="http://electronico.bit-ec.com/media/{{ orden.empresa.encabezado }}" alt="">#}
-    <img src="http://localhost:8000/media/{{ orden.empresa.encabezado }}" alt="">
-    <span style="text-align: center">{{ orden.empresa }}</span>
+<body>
+    <div id="header_content1" style="text-align: center">
+        <img src="/media/{{ orden.empresa.encabezado }}" alt="">
+        <br><span><strong>ORDEN DE TRABAJO NO.:</strong><span style="color: darkred; font-weight: bold">{{ orden.secuencial }}</span></span>
+    </div>
+    <div id="footer_content1">
+        <strong>Número de Referencia:</strong>{{ orden.id }} (ORIGINAL - CLIENTE)
+    </div>
+    <div id="header_content2" style="text-align: center">
+        <img src="/media/{{ orden.empresa.encabezado }}" alt="">
+        <br><span><strong>ORDEN DE TRABAJO NO.:</strong><span style="color: darkred; font-weight: bold">{{ orden.secuencial }}</span></span>
+    </div>
+    <div id="footer_content2">
+        <strong>Número de Referencia:</strong>{{ orden.id }} (COPIA - ARCHIVO)
+    </div>
 
+    <div id="content">
+        <table>
+            <tr>
+                <td style="width: 50%">
+                    <table style="padding-left: 10px">
+                        <tr>
+                            <td style="font-weight: bold">Hora y Fecha de Ingreso:</td>
+                            <td colspan="3">{{ orden.fecha }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold; width: 30%">R.U.C./C.I.</td>
+                            <td style="width: 43%">{{ orden.cliente.identificacion }}</td>
+                            <td style="font-weight: bold; width: 10%">Teléfono:</td>
+                            <td style="width: 10%">{{ orden.cliente.telefono }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Nombre del Cliente:</td>
+                            <td colspan="3">{{ orden.cliente.nombres_apellidos }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Dirección:</td>
+                            <td colspan="3">{{ orden.cliente.direccion }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Clausula:</td>
+                            <td colspan="3" style="text-align: justify">Este documento será necesario presentarlo al momento de retirar su equipo informático.</td>
+                        </tr>
+                        <tr style="padding-top: 10px">
+                            <td colspan="4" style="text-align: center; font-weight: bold">DETALLE DE LOS DISPOSITIVOS</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="font-weight: bold">Dispositivos recibidos:</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">{{ orden.dispositivo_recibido }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Marca y Modelo:</td>
+                            <td colspan="3">{{ orden.marca_modelo }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Contraseña:</td>
+                            <td colspan="3">{{ orden.password }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Número de Serie:</td>
+                            <td colspan="3">{{ orden.serie }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Cables y Accesorios:</td>
+                            <td colspan="3">{{ orden.cables_accesorios }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Marca y Modelo:</td>
+                            <td colspan="3">{{ orden.marca_modelo }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="font-weight: bold">Problema reportado por el cliente:</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">{{ orden.problema_reportado }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="font-weight: bold">Tareas a realizar:</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="text-align: justify">{{ orden.tareas_a_realizar }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="font-weight: bold; text-align: justify">Observaciones:</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">{{ orden.observaciones }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Fecha y Hora de Salida:</td>
+                            <td colspan="3">{{ orden.hora_fecha_salida }}</td>
+                        </tr>
+                    </table>
+                    <br><br>
+                    <table style="padding-left: 10px">
+                        <tr style="text-align: center">
+                            <td style="width: 35%">
+                                _______________________ <br>
+                                <strong>DEPARTAMENTO TÉCNICO</strong>
+                            </td>
+                            <td style="width: 35%">
+                                _______________________ <br>
+                                <strong>CLIENTE</strong>
+                            </td>
+                            <td>
+                                <table>
+                                    <tr style="text-align: justify">
+                                        <td style="width: 60%; font-weight: bold">Total</td>
+                                        <td style="border: #0a6aa1 1px solid; text-align: right;width: 30%">{{ orden.total }}</td>
+                                    </tr>
+                                    <tr style="text-align: justify">
+                                        <td style="font-weight: bold">Abono</td>
+                                        <td style="border: #0a6aa1 1px solid;text-align: right">{{ orden.abono }}</td>
+                                    </tr>
+                                    <tr style="text-align: justify">
+                                        <td style="font-weight: bold">Total a Cobrar</td>
+                                        <td style="border: #0a6aa1 1px solid;text-align: right">{{ orden.total_cobrar }}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="text-align: justify">
+                                <strong>Nota: </strong>Estimado Cliente le informamos que pasado 90 días de permanecer un equipo o
+                                dispositivo en nuestras oficinas será declarado en abandono. Rogamos tomar en cuenta.
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+
+                <td style="width: 50%">
+                    <table style="padding-left: 10px">
+                        <tr>
+                            <td style="font-weight: bold">Hora y Fecha de Ingreso:</td>
+                            <td colspan="3">{{ orden.fecha }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold; width: 30%">R.U.C./C.I.</td>
+                            <td style="width: 43%">{{ orden.cliente.identificacion }}</td>
+                            <td style="font-weight: bold; width: 10%">Teléfono:</td>
+                            <td style="width: 10%">{{ orden.cliente.telefono }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Nombre del Cliente:</td>
+                            <td colspan="3">{{ orden.cliente.nombres_apellidos }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Dirección:</td>
+                            <td colspan="3">{{ orden.cliente.direccion }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Clausula:</td>
+                            <td colspan="3" style="text-align: justify">Este documento será necesario presentarlo al momento de retirar su equipo informático.</td>
+                        </tr>
+                        <tr style="padding-top: 10px">
+                            <td colspan="4" style="text-align: center; font-weight: bold">DETALLE DE LOS DISPOSITIVOS</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="font-weight: bold">Dispositivos recibidos:</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">{{ orden.dispositivo_recibido }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Marca y Modelo:</td>
+                            <td colspan="3">{{ orden.marca_modelo }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Contraseña:</td>
+                            <td colspan="3">{{ orden.password }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Número de Serie:</td>
+                            <td colspan="3">{{ orden.serie }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Cables y Accesorios:</td>
+                            <td colspan="3">{{ orden.cables_accesorios }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Marca y Modelo:</td>
+                            <td colspan="3">{{ orden.marca_modelo }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="font-weight: bold">Problema reportado por el cliente:</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">{{ orden.problema_reportado }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="font-weight: bold">Tareas a realizar:</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="text-align: justify">{{ orden.tareas_a_realizar }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4" style="font-weight: bold; text-align: justify">Observaciones:</td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">{{ orden.observaciones }}</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight: bold">Fecha y Hora de Salida:</td>
+                            <td colspan="3">{{ orden.hora_fecha_salida }}</td>
+                        </tr>
+                    </table>
+                    <br><br>
+                    <table style="padding-left: 10px">
+                        <tr style="text-align: center">
+                            <td style="width: 35%">
+                                _______________________ <br>
+                                <strong>DEPARTAMENTO TÉCNICO</strong>
+                            </td>
+                            <td style="width: 35%">
+                                _______________________ <br>
+                                <strong>CLIENTE</strong>
+                            </td>
+                            <td>
+                                <table>
+                                    <tr style="text-align: justify">
+                                        <td style="width: 60%; font-weight: bold">Total</td>
+                                        <td style="border: #0a6aa1 1px solid; text-align: right;width: 30%">{{ orden.total }}</td>
+                                    </tr>
+                                    <tr style="text-align: justify">
+                                        <td style="font-weight: bold">Abono</td>
+                                        <td style="border: #0a6aa1 1px solid;text-align: right">{{ orden.abono }}</td>
+                                    </tr>
+                                    <tr style="text-align: justify">
+                                        <td style="font-weight: bold">Total a Cobrar</td>
+                                        <td style="border: #0a6aa1 1px solid;text-align: right">{{ orden.total_cobrar }}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="text-align: justify">
+                                <strong>Nota: </strong>Estimado Cliente le informamos que pasado 90 días de permanecer un equipo o
+                                dispositivo en nuestras oficinas será declarado en abandono. Rogamos tomar en cuenta.
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
 </body>
 </html>
