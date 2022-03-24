@@ -305,6 +305,8 @@ def ride(request):
         json = client.service.autorizacionComprobante(request.GET.get('clave'))
         fecha=json['autorizaciones']['autorizacion'][0]['fechaAutorizacion']
         ambiente=json['autorizaciones']['autorizacion'][0]['ambiente']
+        factura.ambiente=json['autorizaciones']['autorizacion'][0]['ambiente']
+        factura.save()
         #print(json)
 
     except:
