@@ -17,7 +17,7 @@
 
         </td>
         <td style="line-height: 15px; border: black 1px solid; padding-left: 5px; padding: 2px" colspan="2">
-            <img src="http://electronico.bit-ec.com/media/{{ cuenta.cuenta.documento.empresa.logotipo }}" style="height: 50px" alt=""><br>
+            <img src="/media/{{ cuenta.cuenta.documento.empresa.logotipo }}" style="height: 50px" alt=""><br>
             <span style="font-weight: bold">DIRECCIÓN MATRIZ:</span><br>
             <span>{{ cuenta.cuenta.documento.empresa.direccion_establecimiento_matriz }}</span><br>
             <span><strong>OBLIGADO A LLEVAR CONTABILIDAD:</strong> {{ cuenta.cuenta.documento.empresa.obligado_llevar_contabilidad }}</span>
@@ -56,6 +56,6 @@
 <br><br>
 <p style="font-weight: bold">Documento firmado electrónicamente: </p>
 <span>{{ cuenta.cuenta.documento.empresa }}</span><br>
-<img src="http://electronico.bit-ec.com/media/codigoQR/{{ cuenta.no_abono }}.png" style="width: 100px" alt="">
+<img src="/media/codigoQR/{{ cuenta.no_abono }}.png" style="width: 100px" alt="">
 </body>
 </html>
