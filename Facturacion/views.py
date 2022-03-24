@@ -286,7 +286,7 @@ def registroDetalles(request):
 
 def facturas(request):
     contexto = {
-        'facturas': Factura.objects.filter(empresa__usuario=request.user),
+        'facturas': Factura.objects.filter(empresa__usuario=request.user).order_by('fecha'),
         'datos':DatosFacturacion.objects.get(empresa__usuario=request.user),
         'empresa': Empresa.objects.get(usuario=request.user),
     }
