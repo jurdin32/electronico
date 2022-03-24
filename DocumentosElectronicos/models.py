@@ -4,6 +4,7 @@ from Personas.models import Clientes
 from Productos.models import Producto
 
 class Factura(models.Model):
+    ambiente=models.IntegerField(default=1)
     tipo=models.CharField(max_length=20, default="FACTURA")
     formaPago=models.ForeignKey(FormasPagos,on_delete=models.CASCADE, default=1)
     empresa=models.ForeignKey(Empresa,on_delete=models.CASCADE,null=True,blank=True)
