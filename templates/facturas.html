@@ -108,8 +108,9 @@
     <script src="{% static 'assets/vendor/data-tables/datetime-moment.js' %}"></script>
     <script>
     $("#tablaFacturas").dataTable({
-        columnDefs: [ { type: 'date', 'targets': [0] } ],
-        order: [[ 0, 'desc' ],[ 1, 'desc' ],[ 6, 'asc' ]],
+        columnDefs: [{type: 'date', 'targets': [0]}],
+        //order: [[ 0, 'desc' ],[ 1, 'desc' ],[ 6, 'asc' ]],
+        order: [[ 0, 'desc' ]],
     })
     </script>
     <script>
