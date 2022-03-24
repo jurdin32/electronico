@@ -33,6 +33,7 @@
                         <th class="text-lg-center text-white">Fecha</th>
                         <th class="text-lg-center text-white">Secuencial</th>
                         <th class="text-white">Cliente</th>
+                        <th class="text-white">Ambiente</th>
                         <th class="text-white">Tipo</th>
                         <th class="text-white text-lg-right">Total</th>
                         <th class="text-white text-center">Estado</th>
@@ -48,6 +49,7 @@
                             <td class="text-lg-center">{{ factura.fecha|date:"d-m-Y" }}</td>
                             <td class="text-lg-center">{{ factura.secuencial }}</td>
                             <td>{{ factura.cliente.nombres_apellidos }}</td>
+                            <td>{{ factura.ambiente }}</td>
                             <td>{{ factura.tipo }}</td>
                             <td class="text-right">{{ factura.importeTotal }}</td>
                             <td id="estado-{{ factura.id }}">
