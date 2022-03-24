@@ -113,5 +113,5 @@ REST_FRAMEWORK = {
 
 CRONJOBS = [
     # Ejecuta comandos todas las mañanas a las 6 a.m.
-    ('*/1 * * * *','electronico.cron.envio_automatico.envio_sri_programado'),
+    ('0 6 * * *','electronico.cron.envio_automatico.envio_sri_programado'),
 ]

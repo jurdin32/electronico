@@ -162,7 +162,6 @@ def firmar_documento(request):
 
 def enviar_sri(request):
     webservice = Webservices.objects.get(empresa__usuario=request.user, estado=True, envio_consulta=1)
-
     if request.GET.get('fac'):
         factura=Factura.objects.get(clave_acceso=request.GET.get('fac'))
         datos = DatosFacturacion.objects.get(empresa=factura.empresa)

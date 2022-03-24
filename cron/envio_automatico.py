@@ -22,6 +22,5 @@ def envio_sri_programado():
             jsonarchivo.write(str(result))
             jsonarchivo.close()
             print("Respuesta: ", result)  # respuesta del servidor
-            break
 
 envio_sri_programado()
