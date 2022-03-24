@@ -201,11 +201,11 @@ def consulta_comprobantes(request):
         datos = DatosFacturacion.objects.get(empresa=factura.empresa)
         path = '%s/autorizados/%s' % (datos.ruta_home_media,request.GET.get('fac'))
         crear_archivos(path,json['autorizaciones']['autorizacion'][0]['comprobante'],'xml')
-        crear_archivos(path,json,'json')
+        crear_archivos(path,u' '.join(json).encode('utf-8').strip(),'json')
         try:
             factura = Factura.objects.get(clave_acceso=request.GET.get('fac'))
             factura.documento = json
-            factura.estado = json['autorizaciones']['autorizacion'][0]['estado']
+            factura.estado = u' '.join(json['autorizaciones']['autorizacion'][0]['estado']).encode('utf-8').strip()
             factura.mensajes = json['autorizaciones']['autorizacion'][0]['mensajes']
             factura.save()
         except:
