@@ -86,6 +86,7 @@ class DatosFacturacion(models.Model):
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         webservices=Webservices.objects.all()
+        self.ambiente=self.ambiente
         if self.ambiente=="1":
             for webservice in webservices.filter(tipo_ambiente=1):
                 webservice.estado=True
