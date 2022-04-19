@@ -34,7 +34,7 @@ def generarFactura(factura_id):
     secuencial = str.zfill(str(datos_factura.secuencial + cantidad), 9)
     ambiente = Webservices.objects.get(empresa=datos, estado=True, envio_consulta=1)
     print(secuencial)
-    clave_acceso = modulo_11('01', factura.empresa.ruc, ambiente.tipo_ambiente, datos.codigo_establecimiento_emisior,
+    clave_acceso = modulo_11('01', factura.empresa.ruc, str(ambiente.tipo_ambiente), datos.codigo_establecimiento_emisior,
                              datos.punto_emision_establecimiento, secuencial, '00000000')
     now = datetime.datetime.now()
     fecha = now.strftime('%d/%m/%Y')
