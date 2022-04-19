@@ -245,7 +245,7 @@ def registroFactura(request):
         formaPago_id=request.GET.get('fpago'),
         secuencial=request.GET.get('secuencial'),
         cliente_id=request.GET.get('id_cliente'),
-        ambiente=datos.ambiente,
+        ambiente=str(datos.ambiente),
         empresa_id=datos.empresa_id,
         totalSinImpuestos=request.GET.get('totalSinImpuestos'),
         iva=request.GET.get('iva'),
