@@ -240,12 +240,17 @@ def facturacion(request):
 
 def registroFactura(request):
     datos = DatosFacturacion.objects.get(empresa__usuario=request.user)
+    ambiente=""
+    if datos.ambiente==1:
+        ambiente="PRUEBAS"
+    if datos.ambiente==2:
+        ambiente = "PRODUCCIÓN"
     fac = Factura.objects.create(
         tipo=request.GET.get('tipo'),
         formaPago_id=request.GET.get('fpago'),
         secuencial=request.GET.get('secuencial'),
         cliente_id=request.GET.get('id_cliente'),
-        ambiente=str(datos.ambiente),
+        ambiente=ambiente,
         empresa_id=datos.empresa_id,
         totalSinImpuestos=request.GET.get('totalSinImpuestos'),
         iva=request.GET.get('iva'),
