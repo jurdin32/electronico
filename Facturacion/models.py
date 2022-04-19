@@ -64,7 +64,7 @@ class Empresa(models.Model):
 
 class Webservices(models.Model):
     empresa=models.ForeignKey(Empresa,on_delete=models.CASCADE,null=True,blank=True)
-    tipo_ambiente=models.CharField(default=1,max_length=1, choices=(("1","Pruebas"),("2","Producción")))
+    tipo_ambiente=models.CharField(default=1,max_length=1, choices=(("1","PRUEBAS"),("2","PRODUCCIÓN")))
     webservice=models.TextField()
     envio_consulta=models.IntegerField(default=1, help_text="1 para enviar al sri, 2 para consultar")#1 consulta 2 envio
     estado=models.BooleanField(default=False)
@@ -86,7 +86,7 @@ class DatosFacturacion(models.Model):
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         webservices=Webservices.objects.all()
-        if self.ambiente==1:
+        if self.ambiente=="1":
             for webservice in webservices.filter(tipo_ambiente=1):
                 webservice.estado=True
                 webservice.estado=True
