@@ -90,15 +90,13 @@ class DatosFacturacion(models.Model):
             webservice.estado=False
             webservice.save()
         if self.ambiente==1:
-            web1=webservices.get(envio_consulta=1,tipo_ambiente=1,estado=True)
-            web1.save()
-            web2 = webservices.get(envio_consulta=2, tipo_ambiente=1,estado=True)
-            web2.save()
+            for web in webservices.filter(tipo_ambiente=1):
+                web.estado=True
+                web.save()
         if self.ambiente==2:
-            web1=webservices.get(envio_consulta=1,tipo_ambiente=2,estado=True)
-            web1.save()
-            web2 = webservices.get(envio_consulta=2, tipo_ambiente=2,estado=True)
-            web2.save()
+            for web in webservices.filter(tipo_ambiente=2):
+                web.estado = True
+                web.save()
 
 
 
