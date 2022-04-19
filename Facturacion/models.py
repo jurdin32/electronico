@@ -77,7 +77,7 @@ class DatosFacturacion(models.Model):
     secuencial=models.IntegerField(default=0)
     secuencial_proforma=models.IntegerField(default=0)
     secual_orden_trabajo=models.IntegerField(default=1)
-    ambiente=models.CharField(choices=(("1","PRUEBAS"),("2","PRODUCCIÓN")),max_length=4)
+    ambiente=models.IntegerField(choices=((1,"PRUEBAS"),(2,"PRODUCCIÓN")))
     certificado=models.FileField(upload_to='certificados',null=True,blank=True)
     clave=models.CharField(max_length=100, default="")
     ruta_home_media=models.CharField(max_length=1000,default='/home/johnny/media/')
@@ -86,25 +86,22 @@ class DatosFacturacion(models.Model):
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         webservices=Webservices.objects.all()
-        self.ambiente=self.ambiente
-        if self.ambiente=="1":
-            for webservice in webservices.filter(tipo_ambiente=1):
-                webservice.estado=True
-                webservice.estado=True
-                webservice.save()
-            for webservice in webservices.filter(tipo_ambiente=2):
-                webservice.estado=False
-                webservice.estado=False
-                webservice.save()
-        else:
-            for webservice in webservices.filter(tipo_ambiente=1):
-                webservice.estado=False
-                webservice.estado=False
-                webservice.save()
-            for webservice in webservices.filter(tipo_ambiente=2):
-                webservice.estado=True
-                webservice.estado=True
-                webservice.save()
+        for webservice in webservices.all():
+            webservice.estado=False
+            webservice.save()
+        if self.ambiente==1:
+            web1=webservices.get(envio_consulta=1,tipo_ambiente=1,estado=True)
+            web1.save()
+            web2 = webservices.get(envio_consulta=2, tipo_ambiente=1,estado=True)
+            web2.save()
+        if self.ambiente==2:
+            web1=webservices.get(envio_consulta=1,tipo_ambiente=2,estado=True)
+            web1.save()
+            web2 = webservices.get(envio_consulta=2, tipo_ambiente=2,estado=True)
+            web2.save()
+
+
+
         super(DatosFacturacion, self).save()
 
     class Meta:
