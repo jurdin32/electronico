@@ -49,11 +49,7 @@
                             <td class="text-lg-center">{{ factura.fecha|date:"d-m-Y" }}</td>
                             <td class="text-lg-center">{{ factura.secuencial }}</td>
                             <td>{{ factura.cliente.nombres_apellidos }}</td>
-                            <td>{% if factura.ambiente == "1" %}
-                                PRUEBAS
-                                {% else %}
-                                PRODUCCIÓN
-                            {% endif %}</td>
+                            <td>{{ factura.ambiente }}</td>
                             <td>{{ factura.tipo }}</td>
                             <td class="text-right">{{ factura.importeTotal }}</td>
                             <td id="estado-{{ factura.id }}">
