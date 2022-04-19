@@ -7,6 +7,8 @@ SECRET_KEY = 'django-insecure-_kmggmlrp*%lq^h3yw1lmnr3vq@2xm=8zxo!9$7p1e(w3(^s+y
 
 DEBUG = True
 
+PRUEBAS=True
+
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
@@ -92,14 +94,15 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATIC_ROOT='/mnt/07EBF45679F193CD/var/www/electronico/static'
-
-# STATICFILES_DIRS=[
-#    'static',
-# ]
-
 MEDIA_URL='/media/'
-MEDIA_ROOT="/mnt/07EBF45679F193CD/var/www/electronico/media"
+if PRUEBAS:
+    MEDIA_ROOT='media'
+    STATICFILES_DIRS = [
+        'static',
+    ]
+else:
+    STATIC_ROOT='/mnt/07EBF45679F193CD/var/www/electronico/static'
+    MEDIA_ROOT="/mnt/07EBF45679F193CD/var/www/electronico/media"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

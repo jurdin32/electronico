@@ -77,7 +77,7 @@ class DatosFacturacion(models.Model):
     secuencial=models.IntegerField(default=0)
     secuencial_proforma=models.IntegerField(default=0)
     secual_orden_trabajo=models.IntegerField(default=1)
-    ambiente=models.IntegerField(default=1)
+    ambiente=models.CharField(choices=(("1","PRUEBAS"),("2","PRODUCCIÓN")),max_length=4)
     certificado=models.FileField(upload_to='certificados',null=True,blank=True)
     clave=models.CharField(max_length=100, default="")
     ruta_home_media=models.CharField(max_length=1000,default='/home/johnny/media/')
